@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class StatsServiceImpl implements StatsService {
-    private final static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final StatsRepository statsRepository;
 

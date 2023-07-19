@@ -1,7 +1,6 @@
 package ru.practicum.stats.server;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;

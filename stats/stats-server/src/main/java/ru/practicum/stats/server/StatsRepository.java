@@ -31,7 +31,7 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
             "and h.created <= ?2 " +
             "and h.uri in (?3) ) as q " +
             "group by q.app, q.uri " +
-            "order by count(1) desc", nativeQuery = true )
+            "order by count(1) desc", nativeQuery = true)
     List<ViewStats> searchByParamsWithUnique(LocalDateTime start, LocalDateTime end, List<String> uri);
 
     @Query(value = "select q.app, q.uri, count(1) as hits from (" +
@@ -41,7 +41,7 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
             "and h.created <= ?2 " +
             ") as q " +
             "group by q.app, q.uri " +
-            "order by count(1) desc", nativeQuery = true )
+            "order by count(1) desc", nativeQuery = true)
     List<ViewStats> searchByParamsWithUnique(LocalDateTime start, LocalDateTime end);
 
 }
