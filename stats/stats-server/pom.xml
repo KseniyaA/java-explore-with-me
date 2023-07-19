@@ -65,19 +65,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <classifier>exec</classifier>
-                    <!--<mainClass>ru.practicum.stats.StatsServiceMain</mainClass>
-                    <layout>JAR</layout>-->
                 </configuration>
-                <!--<executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>-->
-                <!--<configuration>
-                    <classifier>exec</classifier>
-                </configuration>-->
             </plugin>
         </plugins>
     </build>
