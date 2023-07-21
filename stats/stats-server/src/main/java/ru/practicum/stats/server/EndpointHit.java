@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "endpoint_hit"/*, schema = "public"*/)
+@Table(name = "endpoint_hit")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
