@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.stats.dto.EndpointHitDtoRequest;
+import ru.practicum.stats.dto.EndpointHitDtoResponse;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -14,11 +16,11 @@ import java.util.List;
 public class StatsController {
     private final StatsService statsService;
 
-
     @PostMapping("/hit")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public EndpointHit add(@RequestBody @Valid EndpointHit endpointHit) {
-        return statsService.add(endpointHit);
+    public EndpointHitDtoResponse add(@RequestBody @Valid EndpointHitDtoRequest dtoRequest) {
+        EndpointHit endpointHit = EndpointHitMapper.toEndpointHit(dtoRequest);
+        return EndpointHitMapper.toEndpointHitDto(statsService.add(endpointHit));
     }
 
     @GetMapping("/stats")

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,13 +18,10 @@ public class EndpointHit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "App is mandatory")
     private String app;
 
-    @NotBlank(message = "Uri is mandatory")
     private String uri;
 
-    @NotBlank(message = "Ip is mandatory")
     private String ip;
 
     @Column(name = "created")
