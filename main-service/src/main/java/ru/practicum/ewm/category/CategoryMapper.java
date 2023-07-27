@@ -19,7 +19,7 @@ public class CategoryMapper {
                 .build();
     }
 
-    public CategoryDtoResponse toCategoryDto(Category category) {
+    public CategoryDtoResponse toCategoryDtoResponse(Category category) {
         return CategoryDtoResponse.builder()
                 .id(category.getId())
                 .name(category.getName())

@@ -10,6 +10,7 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.stats.dto.EndpointHitDtoRequest;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +35,8 @@ public class StatsClient extends BaseClient {
 
     public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, List<String> uri, Boolean unique) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("start", start);
-        parameters.put("end", end);
+        parameters.put("start", start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        parameters.put("end", end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         parameters.put("uri", uri);
         parameters.put("unique", unique);
 
