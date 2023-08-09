@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.stats.err_handler.BadParameterException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,11 +29,14 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public List<ViewStats> getStats(String start, String end, List<String> uris, Boolean unique) {
+        LocalDateTime startDate = LocalDateTime.parse(start, DATE_TIME_FORMATTER);
+        LocalDateTime endDate = LocalDateTime.parse(end, DATE_TIME_FORMATTER);
+        if (endDate.isBefore(startDate)) {
+            throw new BadParameterException("Ошибка входных параметров");
+        }
         if (unique == null) {
             unique = Boolean.FALSE;
         }
-        LocalDateTime startDate = LocalDateTime.parse(start, DATE_TIME_FORMATTER);
-        LocalDateTime endDate = LocalDateTime.parse(end, DATE_TIME_FORMATTER);
         if (unique) {
             if (uris == null || uris.isEmpty()) {
                 return statsRepository.searchByParamsWithUnique(startDate, endDate);

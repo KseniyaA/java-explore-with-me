@@ -15,6 +15,15 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ErrorHandler {
 
+    @ExceptionHandler(value = {BadParameterException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleBadParameterException(final BadParameterException e) {
+        log.debug("Получен статус 400 Bad Request {}", e.getMessage(), e);
+        return new ErrorResponse(
+                "Ошибка входных параметров", e.getMessage()
+        );
+    }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleIncorrectParameterException(final ConstraintViolationException e) {
