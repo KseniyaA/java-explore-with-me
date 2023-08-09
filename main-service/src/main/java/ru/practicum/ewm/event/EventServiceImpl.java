@@ -117,7 +117,6 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event get(long userId, long eventId) {
-        // TODO нужен ли тут userId
         return getEventById(eventId);
     }
 

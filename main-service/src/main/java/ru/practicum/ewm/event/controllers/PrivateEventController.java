@@ -86,7 +86,7 @@ public class PrivateEventController {
     @ResponseStatus(code = HttpStatus.OK)
     public EventRequestStatusUpdateResultDto changeStatus(@PathVariable("userId") long userId,
                                                           @PathVariable("eventId") long eventId,
-                                                          @RequestBody(required = false) EventRequestStatusUpdateRequestDto requestsDto) {
+                                                          @RequestBody(required = true) EventRequestStatusUpdateRequestDto requestsDto) {
         log.info("Получен запрос PATCH /users/{userId}/events/{eventId}/requests с параметрами userId = {}, " +
                         "eventId = {}, dto = {}", userId, eventId, requestsDto);
         return ParticipantRequestMapper.toEventRequestStatusUpdateRequestDto(

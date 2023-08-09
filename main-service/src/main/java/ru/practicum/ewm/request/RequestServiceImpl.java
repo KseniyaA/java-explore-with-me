@@ -86,7 +86,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public EventRequestStatusUpdateResult changeRequestsStatus(long userId, long eventId,
                                                                List<Long> requestsIds, String status) {
-        User user = getUserById(userId); // TODO возможно стоить добавить проверку о принадлежности пользователю
+        getUserById(userId);
         Event event = getEventById(eventId);
         if (event.getParticipantLimit() != 0 && event.getConfirmedRequests() >= event.getParticipantLimit()) {
             throw new ConflictOperationException("Достигнут лимит по заявкам на данное событие");
@@ -96,15 +96,6 @@ public class RequestServiceImpl implements RequestService {
         if (event.getParticipantLimit().equals(0) || event.getRequestModeration().equals(Boolean.FALSE)) {
             List<ParticipantRequest>  requestsByIds = requestRepository.findAllByEvent(event);
 
-            /*Integer confirmedRequests = event.getConfirmedRequests();
-            event.setConfirmedRequests(confirmedRequests + requestsByIds.size());
-            eventRepository.save(event);
-
-            for (ParticipantRequest request : requestsByIds) {
-                request.setStatus(RequestStatus.CONFIRMED);
-            }
-            requestRepository.saveAll(requestsByIds);
-*/
             return EventRequestStatusUpdateResult.builder()
                     .confirmedRequests(requestsByIds).build();
         }
@@ -113,12 +104,8 @@ public class RequestServiceImpl implements RequestService {
                 ? requestRepository.findAllByEvent(event)
                 : requestRepository.findAllById(requestsIds);
 
-        Boolean updateStatusResult = confirmOrRejectRequests(event, requestForConfirm,
+        confirmOrRejectRequests(event, requestForConfirm,
                 status == null ? RequestStatus.CONFIRMED : RequestStatus.valueOf(status));
-
-        if (!updateStatusResult) {
-            throw new ConflictOperationException("Достигнут лимит по заявкам на данное событие");
-        }
 
         List<ParticipantRequest> confirmedOrRejectRequests = requestRepository.findAllById(requestForConfirm
                 .stream().map(ParticipantRequest::getId).collect(Collectors.toList()));
