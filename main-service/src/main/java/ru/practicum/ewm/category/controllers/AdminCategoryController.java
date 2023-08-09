@@ -24,6 +24,7 @@ public class AdminCategoryController {
     public CategoryDtoResponse add(@RequestBody @Valid CategoryDtoRequest dto) {
         log.info("Получен запрос POST /admin/categories с параметрами dto = {}", dto);
         Category category = categoryService.add(CategoryMapper.toCategory(dto));
+        log.info("Создана категория с id = {}, значение = {}", category.getId(), CategoryMapper.toCategoryDtoResponse(category));
         return CategoryMapper.toCategoryDtoResponse(category);
     }
 

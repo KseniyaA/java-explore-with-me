@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 public class EventDtoRequest {
 
     @NotBlank(groups = {Marker.OnCreate.class},
-        message = "Поле description не должно быть пустым")
+        message = "Поле annotation не должно быть пустым")
     @ValidateAnnotationEvent
     @Size(min = 20, max = 2000, groups = {Marker.OnCreate.class, Marker.OnUpdate.class})
     private String annotation;

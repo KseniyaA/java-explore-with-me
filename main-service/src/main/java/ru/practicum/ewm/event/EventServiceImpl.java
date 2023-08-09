@@ -53,7 +53,6 @@ public class EventServiceImpl implements EventService {
         event.setEventStatus(EventStatus.CREATED);
         event.setViews(0);
         event.setConfirmedRequests(0);
-        // TODO проверить проставляются ли дефолтные значения для PG
         if (event.getPaid() == null) {
             event.setPaid(Boolean.FALSE);
         }
@@ -63,6 +62,7 @@ public class EventServiceImpl implements EventService {
         if (event.getRequestModeration() == null) {
             event.setRequestModeration(true);
         }
+
         Event createdEvent = eventRepository.save(event);
         updateStatusAfterCreate(createdEvent);
         return createdEvent;
