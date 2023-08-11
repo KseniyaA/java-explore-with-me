@@ -53,9 +53,7 @@ public class Event {
     @ToString.Exclude
     private User initiator;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "location_id", referencedColumnName = "id")
-    @ToString.Exclude
+    @Embedded
     private Location location;
 
     private Integer views;

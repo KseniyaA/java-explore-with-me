@@ -1,6 +1,7 @@
 package ru.practicum.ewm.event;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventService {
@@ -17,8 +18,8 @@ public interface EventService {
     List<Event> getAll(String text, List<Long> categories, Boolean paid, String rangeStart, String rangeEnd,
                        Boolean onlyAvailable, String sort, Integer from, Integer size, HttpServletRequest request);
 
-    List<Event> getAllByParams(List<Long> users, List<String> states, List<Long> categories, String rangeStart,
-                               String rangeEnd, Integer from, Integer size);
+    List<Event> getAllByParams(List<Long> users, List<String> states, List<Long> categories, LocalDateTime rangeStart,
+                               LocalDateTime rangeEnd, Integer from, Integer size);
 
     Event getPublishedEvent(long eventId, HttpServletRequest request);
 }

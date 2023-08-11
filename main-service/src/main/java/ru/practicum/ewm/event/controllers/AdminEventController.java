@@ -2,6 +2,7 @@ package ru.practicum.ewm.event.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.event.Event;
@@ -11,6 +12,7 @@ import ru.practicum.ewm.event.dto.EventFullDtoResponse;
 import ru.practicum.ewm.event.dto.UpdateEventAdminRequest;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,8 +28,10 @@ public class AdminEventController {
     public List<EventFullDtoResponse> getAll(@RequestParam(value = "users", required = false) List<Long> users,
                                               @RequestParam(value = "states", required = false) List<String> states,
                                               @RequestParam(value = "categories", required = false) List<Long> categories,
-                                              @RequestParam(value = "rangeStart", required = false) String rangeStart,
-                                              @RequestParam(value = "rangeEnd", required = false) String rangeEnd,
+                                              @RequestParam(value = "rangeStart", required = false)
+                                                 @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
+                                              @RequestParam(value = "rangeEnd", required = false)
+                                                 @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
                                               @RequestParam(defaultValue = "0") Integer from,
                                               @RequestParam(defaultValue = "10") Integer size) {
         log.info("Получен запрос GET /admin/events с параметрами users = {}, states = {}, categories = {}, " +

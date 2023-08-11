@@ -1,5 +1,3 @@
---drop all objects;
-
 DROP TABLE IF EXISTS category CASCADE;
 CREATE TABLE IF NOT EXISTS category (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -14,13 +12,6 @@ CREATE TABLE IF NOT EXISTS users (
     name VARCHAR(250) NOT NULL,
     CONSTRAINT UQ_USERS_EMAIL UNIQUE (email),
     CONSTRAINT UQ_USERS_NAME UNIQUE (name)
-);
-
-DROP TABLE IF EXISTS location CASCADE;
-CREATE TABLE IF NOT EXISTS location (
-    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    lat DOUBLE PRECISION NOT NULL,
-    lon DOUBLE PRECISION NOT NULL
 );
 
 DROP TABLE IF EXISTS event CASCADE;
@@ -39,11 +30,11 @@ CREATE TABLE IF NOT EXISTS event (
     created_on timestamp WITHOUT TIME ZONE NOT NULL,
     published_on timestamp WITHOUT TIME ZONE,
     initiator_id BIGINT NOT NULL,
-    location_id BIGINT NOT NULL,
+    lat DOUBLE PRECISION NOT NULL,
+    lon DOUBLE PRECISION NOT NULL,
     views BIGINT DEFAULT 0,
     CONSTRAINT fk_event_to_category FOREIGN KEY(category_id) REFERENCES category(id),
-    CONSTRAINT fk_event_to_initiator FOREIGN KEY(initiator_id) REFERENCES users(id),
-    CONSTRAINT fk_event_to_location FOREIGN KEY(location_id) REFERENCES location(id)
+    CONSTRAINT fk_event_to_initiator FOREIGN KEY(initiator_id) REFERENCES users(id) --,
 );
 
 DROP TABLE IF EXISTS request CASCADE;

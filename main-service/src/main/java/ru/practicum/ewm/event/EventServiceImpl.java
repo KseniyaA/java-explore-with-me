@@ -177,8 +177,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> getAllByParams(List<Long> users, List<String> states, List<Long> categories, String rangeStart,
-                                      String rangeEnd, Integer from, Integer size) {
+    public List<Event> getAllByParams(List<Long> users, List<String> states, List<Long> categories, LocalDateTime rangeStart,
+                                      LocalDateTime rangeEnd, Integer from, Integer size) {
 
         BooleanExpression expr = null;
         if (users != null && !users.isEmpty()) {
@@ -194,11 +194,11 @@ public class EventServiceImpl implements EventService {
             expr = expr != null ? expr.and(categoriesExpr) : categoriesExpr;
         }
         if (rangeStart != null) {
-            BooleanExpression startExpr = QEvent.event.createdOn.after(LocalDateTime.parse(rangeStart, DATE_TIME_FORMATTER));
+            BooleanExpression startExpr = QEvent.event.createdOn.after(rangeStart);
             expr = expr != null ? expr.and(startExpr) : startExpr;
         }
         if (rangeEnd != null) {
-            BooleanExpression endExpr = QEvent.event.createdOn.before(LocalDateTime.parse(rangeEnd, DATE_TIME_FORMATTER));
+            BooleanExpression endExpr = QEvent.event.createdOn.before(rangeEnd);
             expr = expr != null ? expr.and(endExpr) : endExpr;
         }
         Pageable page = PageRequest.of(from / size, size, Sort.by("id").ascending());
