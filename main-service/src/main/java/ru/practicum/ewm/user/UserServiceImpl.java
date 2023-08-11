@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.exception.ConflictOperationException;
 import ru.practicum.ewm.exception.EntityNotFoundException;
 
 import java.util.List;
@@ -22,14 +21,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User add(User newUser) {
-        List<User> usersByName = userRepository.findAllByName(newUser.getName());
-        if (!usersByName.isEmpty()) {
-            throw new ConflictOperationException("Пользователь с именем " + newUser.getName() + " уже существует");
-        }
-        List<User> usersByEmail = userRepository.findAllByEmail(newUser.getEmail());
-        if (!usersByEmail.isEmpty()) {
-            throw new ConflictOperationException("Пользователь с email " + newUser.getEmail() + " уже существует");
-        }
         return userRepository.save(newUser);
     }
 

@@ -12,6 +12,7 @@ import ru.practicum.ewm.event.Event;
 import ru.practicum.ewm.event.EventRepository;
 import ru.practicum.ewm.exception.EntityNotFoundException;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,9 +29,10 @@ public class CompilationServiceImpl implements CompilationService {
         if (compilation.getPinned() == null) {
             compilation.setPinned(Boolean.FALSE);
         }
-        List<Event> events = eventRepository.findAllById(compilation.getEvents().stream().map(Event::getId).collect(Collectors.toList()));
+        List<Event> events = eventRepository.findAllById(compilation.getEvents().stream().map(Event::getId)
+                .collect(Collectors.toList()));
         Compilation createdCompilation = compilationRepository.save(compilation);
-        createdCompilation.setEvents(events);
+        createdCompilation.setEvents(new HashSet<>(events));
         return createdCompilation;
     }
 
@@ -64,7 +66,7 @@ public class CompilationServiceImpl implements CompilationService {
         Compilation compilation = getById(compId);
         if (dtoRequest.getEvents() != null && !dtoRequest.getEvents().isEmpty()) {
             List<Event> events = eventRepository.findAllById(dtoRequest.getEvents());
-            compilation.setEvents(events);
+            compilation.setEvents(new HashSet<>(events));
         }
         compilation.setTitle(dtoRequest.getTitle() != null ? dtoRequest.getTitle() : compilation.getTitle());
         compilation.setPinned(dtoRequest.getPinned() != null ? dtoRequest.getPinned() : compilation.getPinned());

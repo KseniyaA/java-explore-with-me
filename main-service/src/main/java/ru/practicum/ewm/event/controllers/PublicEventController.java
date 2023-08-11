@@ -2,7 +2,6 @@ package ru.practicum.ewm.event.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.event.Event;
@@ -24,7 +23,6 @@ public class PublicEventController {
     private final EventService eventService;
 
     @GetMapping
-    @ResponseStatus(code = HttpStatus.OK)
     public List<EventShortDtoResponse> getAll(@RequestParam(value = "text", required = false) String text,
                                               @RequestParam(value = "categories", required = false) List<Long> categories,
                                               @RequestParam(value = "paid", required = false) Boolean paid,
@@ -44,7 +42,6 @@ public class PublicEventController {
     }
 
     @GetMapping("/{eventId}")
-    @ResponseStatus(code = HttpStatus.OK)
     public EventFullDtoResponse get(@PathVariable("eventId") long eventId, HttpServletRequest request) {
         log.info("Получен запрос GET /events/{eventId} с параметрами eventId = {}", eventId);
         Event event = eventService.getPublishedEvent(eventId, request);

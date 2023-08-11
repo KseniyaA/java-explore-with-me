@@ -8,13 +8,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.event.Event;
 import ru.practicum.ewm.event.EventRepository;
 import ru.practicum.ewm.exception.ConflictOperationException;
 import ru.practicum.ewm.exception.EntityNotFoundException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,33 +24,28 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public Category add(Category newCategory) {
-        List<Category> categoriesByName = categoryRepository.findAll().stream()
-                .filter(x -> x.getName().toLowerCase().equals(newCategory.getName().toLowerCase()))
-                .collect(Collectors.toList());
-        if (!categoriesByName.isEmpty()) {
-            throw new ConflictOperationException("Категория с наименованием = " + newCategory.getName() + " уже существует");
-        }
         return categoryRepository.save(newCategory);
     }
 
     @Transactional
     @Override
     public Category update(Category newCategory) {
-        List<Category> categoriesByName = categoryRepository.findAll().stream()
+        /*List<Category> categoriesByName = categoryRepository.findAll().stream()
                 .filter(x -> x.getName().toLowerCase().equals(newCategory.getName().toLowerCase())
                         && !x.getId().equals(newCategory.getId()))
                 .collect(Collectors.toList());
         if (!categoriesByName.isEmpty()) {
             throw new ConflictOperationException("Категория с наименованием = " + newCategory.getName() + " уже существует");
-        }
+        }*/
         return categoryRepository.save(newCategory);
     }
 
     @Transactional
     @Override
     public void delete(Long id) {
-        List<Event> eventsByCategory = eventRepository.findByCategory(getById(id));
-        if (!eventsByCategory.isEmpty()) {
+//        boolean existsByCategory = ;
+//        List<Event> eventsByCategory = eventRepository.findByCategory(getById(id));
+        if (eventRepository.existsByCategory(getById(id))) {
             throw new ConflictOperationException("Удаление невозможно, так как существуют события по данной категории");
         }
         categoryRepository.deleteById(id);

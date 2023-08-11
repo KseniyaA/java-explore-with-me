@@ -13,4 +13,6 @@ public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPre
     Page<Event> findByInitiator(User initiator, Pageable page);
 
     List<Event> findByCategory(Category category);
+
+    boolean existsByCategory(Category category);
 }

@@ -38,12 +38,21 @@ public class ErrorHandler {
         );
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleIncorrectParameterException(final ConstraintViolationException e) {
         log.debug("Получен статус 400 Bad Request {}", e.getMessage(), e);
         return new ErrorResponse(
                 "Ошибка валидации", e.getMessage()
+        );
+    }
+
+    @ExceptionHandler(org.hibernate.exception.ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleIncorrectParameterException(final org.hibernate.exception.ConstraintViolationException e) {
+        log.debug("Получен статус 409 Conflict {}", e.getCause(), e);
+        return new ErrorResponse(
+                "Ошибка валидации", e.getCause().toString()
         );
     }
 
@@ -91,9 +100,11 @@ public class ErrorHandler {
         );
     }
 
+
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleArgumentValidException(final Exception e) {
-        log.debug("Получен статус 409 Conflict {}", e.getMessage(), e);
+        log.debug("Получен статус 400 BadRequest {}", e.getMessage(), e);
         return new ErrorResponse(
                 "Непредвиденная ошибка: ", e.getMessage()
         );

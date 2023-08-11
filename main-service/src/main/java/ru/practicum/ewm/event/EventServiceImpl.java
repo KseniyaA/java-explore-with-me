@@ -11,7 +11,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.category.CategoryRepository;
 import ru.practicum.ewm.exception.BadParameterException;
 import ru.practicum.ewm.exception.ConflictOperationException;
 import ru.practicum.ewm.exception.EntityNotFoundException;
@@ -37,7 +36,6 @@ public class EventServiceImpl implements EventService {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
-    private final CategoryRepository categoryRepository;
 
     @Autowired
     private StatsClientProvider statsClientProvider;

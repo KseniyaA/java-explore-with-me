@@ -2,7 +2,6 @@ package ru.practicum.ewm.compilation.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.compilation.Compilation;
@@ -23,7 +22,6 @@ public class PublicCompilationController {
     private final CompilationService compilationService;
 
     @GetMapping
-    @ResponseStatus(code = HttpStatus.OK)
     public List<CompilationDtoResponse> getAll(@PathVariable(value = "pinned", required = false) Boolean pinned,
                                                @RequestParam(defaultValue = "0") Integer from,
                                                @RequestParam(defaultValue = "10") Integer size) {
@@ -34,7 +32,6 @@ public class PublicCompilationController {
     }
 
     @GetMapping("/{compId}")
-    @ResponseStatus(code = HttpStatus.OK)
     public CompilationDtoResponse get(@PathVariable("compId") long compId) {
         log.info("Получен запрос GET /compilations/{compId} с параметрами compId = {}", compId);
         return CompilationMapper.toCompilationDtoResponse(compilationService.getById(compId));

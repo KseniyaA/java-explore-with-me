@@ -29,7 +29,6 @@ public class AdminCategoryController {
     }
 
     @PatchMapping("/{catId}")
-    @ResponseStatus(code = HttpStatus.OK)
     public CategoryDtoResponse update(@PathVariable("catId") long catId, @RequestBody @Valid CategoryDtoRequest dto) {
         log.info("Получен запрос PATCH /admin/categories/{catId} с параметрами catId = {}, dto = {}", catId, dto);
         Category category = categoryService.update(CategoryMapper.toCategory(dto, catId));

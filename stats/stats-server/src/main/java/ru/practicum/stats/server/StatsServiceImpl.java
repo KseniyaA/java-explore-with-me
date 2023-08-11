@@ -28,9 +28,7 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<ViewStats> getStats(String start, String end, List<String> uris, Boolean unique) {
-        LocalDateTime startDate = LocalDateTime.parse(start, DATE_TIME_FORMATTER);
-        LocalDateTime endDate = LocalDateTime.parse(end, DATE_TIME_FORMATTER);
+    public List<ViewStats> getStats(LocalDateTime startDate, LocalDateTime endDate, List<String> uris, Boolean unique) {
         if (endDate.isBefore(startDate)) {
             throw new BadParameterException("Ошибка входных параметров");
         }

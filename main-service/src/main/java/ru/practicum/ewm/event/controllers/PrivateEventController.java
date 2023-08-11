@@ -32,7 +32,6 @@ public class PrivateEventController {
     private final RequestService requestService;
 
     @GetMapping
-    @ResponseStatus(code = HttpStatus.OK)
     public List<EventShortDtoResponse> getAll(@PathVariable("userId") long userId,
                                               @RequestParam(defaultValue = "0") Integer from,
                                               @RequestParam(defaultValue = "10") Integer size) {
@@ -53,7 +52,6 @@ public class PrivateEventController {
     }
 
     @GetMapping("/{eventId}")
-    @ResponseStatus(code = HttpStatus.OK)
     public EventFullDtoResponse get(@PathVariable("userId") long userId,
                                     @PathVariable("eventId") long eventId) {
         log.info("Получен запрос GET /users/{userId}/events/{eventId} с параметрами userId = {}, eventId = {}", userId, eventId);
@@ -62,7 +60,6 @@ public class PrivateEventController {
     }
 
     @PatchMapping("/{eventId}")
-    @ResponseStatus(code = HttpStatus.OK)
     public EventFullDtoResponse update(@PathVariable("userId") long userId,
                                        @PathVariable("eventId") long eventId,
                                        @RequestBody @Validated(Marker.OnUpdate.class) EventDtoRequest dto) {
@@ -73,7 +70,6 @@ public class PrivateEventController {
     }
 
     @GetMapping("/{eventId}/requests")
-    @ResponseStatus(code = HttpStatus.OK)
     public List<ParticipantRequestDto> getRequests(@PathVariable("userId") long userId,
                                                    @PathVariable("eventId") long eventId) {
         log.info("Получен запрос GET /users/{userId}/events/{eventId}/requests с параметрами userId = {}, eventId = {}",
@@ -83,7 +79,6 @@ public class PrivateEventController {
     }
 
     @PatchMapping("/{eventId}/requests")
-    @ResponseStatus(code = HttpStatus.OK)
     public EventRequestStatusUpdateResultDto changeStatus(@PathVariable("userId") long userId,
                                                           @PathVariable("eventId") long eventId,
                                                           @RequestBody(required = true) EventRequestStatusUpdateRequestDto requestsDto) {

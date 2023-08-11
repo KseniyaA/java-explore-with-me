@@ -18,6 +18,7 @@ import java.util.Map;
 @Getter
 @Setter
 public class StatsClient extends BaseClient {
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public StatsClient(String statsServerUrl) {
         super(
@@ -35,8 +36,8 @@ public class StatsClient extends BaseClient {
 
     public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, List<String> uri, Boolean unique) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("start", start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        parameters.put("end", end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        parameters.put("start", start.format(DATE_TIME_FORMATTER));
+        parameters.put("end", end.format(DATE_TIME_FORMATTER));
         parameters.put("uri", uri);
         parameters.put("unique", unique);
 

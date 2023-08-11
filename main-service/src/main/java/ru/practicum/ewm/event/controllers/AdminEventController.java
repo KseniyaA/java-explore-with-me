@@ -2,7 +2,6 @@ package ru.practicum.ewm.event.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.event.Event;
@@ -24,7 +23,6 @@ public class AdminEventController {
     private final EventService eventService;
 
     @GetMapping
-    @ResponseStatus(code = HttpStatus.OK)
     public List<EventFullDtoResponse> getAll(@RequestParam(value = "users", required = false) List<Long> users,
                                               @RequestParam(value = "states", required = false) List<String> states,
                                               @RequestParam(value = "categories", required = false) List<Long> categories,
@@ -40,7 +38,6 @@ public class AdminEventController {
     }
 
     @PatchMapping("/{eventId}")
-    @ResponseStatus(code = HttpStatus.OK)
     public EventFullDtoResponse update(@PathVariable("eventId") long eventId,
                                        @RequestBody @Valid UpdateEventAdminRequest dto) {
         log.info("Получен запрос PATCH /admin/events/{eventId} с параметрами eventId = {}, " +

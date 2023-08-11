@@ -21,7 +21,6 @@ public class PrivateRequestController {
     private final RequestService requestService;
 
     @GetMapping
-    @ResponseStatus(code = HttpStatus.OK)
     public List<ParticipantRequestDto> get(@PathVariable("userId") long userId) {
         log.info("Получен запрос GET /users/{userId}/requests с параметрами userId = {}", userId);
         List<ParticipantRequest> event = requestService.getRequests(userId);
@@ -37,7 +36,6 @@ public class PrivateRequestController {
     }
 
     @PatchMapping("/{requestId}/cancel")
-    @ResponseStatus(code = HttpStatus.OK)
     public ParticipantRequestDto update(@PathVariable("userId") long userId, @PathVariable("requestId") long requestId) {
         log.info("Получен запрос PATCH /users/{userId}/requests/{requestId}/cancel с параметрами userId = {}, requestId = {}",
                 userId, requestId);

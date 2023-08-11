@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 public class CompilationMapper {
     public Compilation toCompilation(CompilationDtoRequest compilationDto) {
         return Compilation.builder()
-                .events(compilationDto.getEvents() == null || compilationDto.getEvents().isEmpty() ? Collections.emptyList()
-                        : compilationDto.getEvents().stream().map(x -> Event.builder().id(x).build()).collect(Collectors.toList()))
+                .events(compilationDto.getEvents() == null || compilationDto.getEvents().isEmpty() ? Collections.emptySet()
+                        : compilationDto.getEvents().stream().map(x -> Event.builder().id(x).build()).collect(Collectors.toSet()))
                 .title(compilationDto.getTitle())
                 .pinned(compilationDto.getPinned())
                 .build();
