@@ -10,6 +10,7 @@ import ru.practicum.stats.dto.EndpointHitDtoResponse;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -26,10 +27,13 @@ public class StatsController {
     }
 
     @GetMapping("/stats")
-    private List<ViewStats> getStats(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
-                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
-                                     @RequestParam(required = false) List<String> uris,
+    private List<ViewStats> getStats(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") LocalDateTime start,
+                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") LocalDateTime end,
+                                     @RequestParam(required = false) String uri,
                                      @RequestParam(required = false) Boolean unique) {
-        return statsService.getStats(start, end, uris, unique);
+        log.info("Получен запрос GET /stats с параметрами start = {}, end = {}, url = {}, unique = {}", start, end, uri, unique);
+        List<String> uriList = Arrays.asList(uri.split(","));
+        List<ViewStats> stats = statsService.getStats(start, end, uriList, unique);
+        return stats;
     }
 }

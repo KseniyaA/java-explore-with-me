@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,10 +28,8 @@ import ru.practicum.stats.dto.EndpointHitDtoRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,8 +47,6 @@ public class EventServiceImpl implements EventService {
     @Autowired
     private StatsClientProvider statsClientProvider;
 
-    private static Map<String, List<String>> uriIpMap = new HashMap<>();
-
     @Transactional
     @Override
     public Event add(Long userId, Event event) {
@@ -57,7 +54,6 @@ public class EventServiceImpl implements EventService {
         event.setInitiator(user);
         event.setCreatedOn(LocalDateTime.now());
         event.setEventStatus(EventStatus.CREATED);
-        event.setViews(0);
         if (event.getPaid() == null) {
             event.setPaid(Boolean.FALSE);
         }
@@ -237,26 +233,24 @@ public class EventServiceImpl implements EventService {
             throw new EntityNotFoundException("Опубликованное событие с id = " + eventId + " не найдено");
         }
         sendStat(request);
-        checkAndIncView(eventById, request);
+        Integer views = getViewsByEvent(eventById, request);
+        eventById.setViews(views);
         return eventById;
     }
 
-    @Transactional
-    public void checkAndIncView(Event event, HttpServletRequest request) {
-        if (uriIpMap.containsKey(request.getRequestURI())) {
-            List<String> ips = uriIpMap.get(request.getRequestURI());
-            List<String> ip = ips.stream().filter(x -> x.equals(request.getRemoteAddr())).collect(Collectors.toList());
-            if (ip.isEmpty()) {
-                ips.add(request.getRemoteAddr());
-            } else {
-                Integer views = event.getViews();
-                if (views == 0) {
-                    event.setViews(++views);
-                }
-            }
-        } else {
-            uriIpMap.put(request.getRequestURI(), Arrays.asList(request.getRemoteAddr()));
+    private Integer getViewsByEvent(Event event, HttpServletRequest request) {
+        LocalDateTime endDate = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS);
+        ResponseEntity<Object> stats = statsClientProvider.getClient().getStats(event.getCreatedOn().truncatedTo(ChronoUnit.MILLIS),
+                endDate,
+                Arrays.asList(request.getRequestURI()),
+                Boolean.TRUE);
+
+        ArrayList statsResult = (ArrayList) stats.getBody();
+        if (stats.getStatusCode().is2xxSuccessful() && !(statsResult.isEmpty())) {
+            LinkedHashMap statsResultMap = (LinkedHashMap) statsResult.get(0);
+            return (Integer) statsResultMap.get("hits");
         }
+        return 0;
     }
 
     @Transactional

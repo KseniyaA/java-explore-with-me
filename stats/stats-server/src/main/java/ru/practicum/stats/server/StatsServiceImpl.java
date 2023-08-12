@@ -8,23 +8,20 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.stats.err_handler.BadParameterException;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class StatsServiceImpl implements StatsService {
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
     private final StatsRepository statsRepository;
 
     @Transactional
     @Override
     public EndpointHit add(EndpointHit endpointHit) {
-        endpointHit.setTimestamp(LocalDateTime.now());
-        EndpointHit createdEndpointHit = statsRepository.save(endpointHit);
-        return createdEndpointHit;
+        endpointHit.setTimestamp(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
+        return statsRepository.save(endpointHit);
     }
 
     @Override

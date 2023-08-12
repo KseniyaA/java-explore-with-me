@@ -31,7 +31,6 @@ CREATE TABLE IF NOT EXISTS event (
     initiator_id BIGINT NOT NULL,
     lat DOUBLE PRECISION NOT NULL,
     lon DOUBLE PRECISION NOT NULL,
-    views BIGINT DEFAULT 0,
     CONSTRAINT fk_event_to_category FOREIGN KEY(category_id) REFERENCES category(id),
     CONSTRAINT fk_event_to_initiator FOREIGN KEY(initiator_id) REFERENCES users(id) --,
 );

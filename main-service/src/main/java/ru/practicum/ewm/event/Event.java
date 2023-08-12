@@ -54,6 +54,7 @@ public class Event {
     @Embedded
     private Location location;
 
+    @Transient
     private Integer views;
 
     @Transient

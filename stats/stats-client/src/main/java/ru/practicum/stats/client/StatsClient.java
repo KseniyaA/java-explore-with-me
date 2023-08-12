@@ -14,11 +14,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
 public class StatsClient extends BaseClient {
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
     public StatsClient(String statsServerUrl) {
         super(
@@ -38,9 +39,10 @@ public class StatsClient extends BaseClient {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("start", start.format(DATE_TIME_FORMATTER));
         parameters.put("end", end.format(DATE_TIME_FORMATTER));
-        parameters.put("uri", uri);
+        parameters.put("uri", uri.stream().map(String::valueOf).collect(Collectors.joining(",")));
         parameters.put("unique", unique);
 
-        return get("/stats", parameters);
+
+        return get("/stats?start={start}&end={end}&uri={uri}&unique={unique}", parameters);
     }
 }
