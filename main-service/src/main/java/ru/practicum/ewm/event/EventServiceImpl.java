@@ -28,7 +28,6 @@ import ru.practicum.stats.dto.EndpointHitDtoRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -239,8 +238,8 @@ public class EventServiceImpl implements EventService {
     }
 
     private Integer getViewsByEvent(Event event, HttpServletRequest request) {
-        LocalDateTime endDate = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS);
-        ResponseEntity<Object> stats = statsClientProvider.getClient().getStats(event.getCreatedOn().truncatedTo(ChronoUnit.MILLIS),
+        LocalDateTime endDate = LocalDateTime.now().plusHours(1);
+        ResponseEntity<Object> stats = statsClientProvider.getClient().getStats(event.getCreatedOn(),
                 endDate,
                 Arrays.asList(request.getRequestURI()),
                 Boolean.TRUE);

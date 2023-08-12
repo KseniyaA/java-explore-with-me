@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 public class StatsClient extends BaseClient {
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public StatsClient(String statsServerUrl) {
         super(
