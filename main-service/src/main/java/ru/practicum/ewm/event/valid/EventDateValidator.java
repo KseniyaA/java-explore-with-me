@@ -1,12 +1,10 @@
 package ru.practicum.ewm.event.valid;
 
-import ru.practicum.ewm.event.dto.EventDtoRequest;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDateTime;
 
-public class EventDateValidator implements ConstraintValidator<ValidateEventDateEvent, EventDtoRequest> {
+public class EventDateValidator implements ConstraintValidator<ValidateEventDateEvent, LocalDateTime> {
 
     @Override
     public void initialize(ValidateEventDateEvent constraintAnnotation) {
@@ -14,12 +12,12 @@ public class EventDateValidator implements ConstraintValidator<ValidateEventDate
     }
 
     @Override
-    public boolean isValid(EventDtoRequest eventDtoRequest, ConstraintValidatorContext constraintValidatorContext) {
-        if (eventDtoRequest.getEventDate() != null) {
-            if (eventDtoRequest.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
+    public boolean isValid(LocalDateTime eventDate, ConstraintValidatorContext constraintValidatorContext) {
+        if (eventDate != null) {
+            if (eventDate.isBefore(LocalDateTime.now().plusHours(2))) {
                 return false;
             }
-            if (eventDtoRequest.getEventDate().isBefore(LocalDateTime.now())) {
+            if (eventDate.isBefore(LocalDateTime.now())) {
                 return false;
             }
         }

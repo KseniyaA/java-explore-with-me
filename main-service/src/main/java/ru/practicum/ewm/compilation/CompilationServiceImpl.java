@@ -12,6 +12,7 @@ import ru.practicum.ewm.event.Event;
 import ru.practicum.ewm.event.EventRepository;
 import ru.practicum.ewm.exception.EntityNotFoundException;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,8 +30,9 @@ public class CompilationServiceImpl implements CompilationService {
         if (compilation.getPinned() == null) {
             compilation.setPinned(Boolean.FALSE);
         }
-        List<Event> events = eventRepository.findAllById(compilation.getEvents().stream().map(Event::getId)
-                .collect(Collectors.toList()));
+        List<Event> events = eventRepository.findAllById(compilation.getEvents() == null
+                ? Collections.emptyList()
+                : compilation.getEvents().stream().map(Event::getId).collect(Collectors.toList()));
         Compilation createdCompilation = compilationRepository.save(compilation);
         createdCompilation.setEvents(new HashSet<>(events));
         return createdCompilation;

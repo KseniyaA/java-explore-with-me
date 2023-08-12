@@ -4,6 +4,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +37,9 @@ public class EventServiceImpl implements EventService {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+
+    @Value("${main.service.app}")
+    private String mainServiceApp;
 
     @Autowired
     private StatsClientProvider statsClientProvider;
@@ -277,7 +281,7 @@ public class EventServiceImpl implements EventService {
         EndpointHitDtoRequest ewm = EndpointHitDtoRequest.builder()
                 .uri(request.getRequestURI())
                 .ip(request.getRemoteAddr())
-                .app("ewm").build();
+                .app(mainServiceApp).build();
         statsClientProvider.getClient().sendStat(ewm);
     }
 }

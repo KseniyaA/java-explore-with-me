@@ -2,7 +2,6 @@ package ru.practicum.ewm.event.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.event.Event;
 import ru.practicum.ewm.event.EventMapper;
@@ -18,7 +17,6 @@ import java.util.stream.Collectors;
 @RequestMapping(path = "/events")
 @Slf4j
 @RequiredArgsConstructor
-@Validated
 public class PublicEventController {
     private final EventService eventService;
 

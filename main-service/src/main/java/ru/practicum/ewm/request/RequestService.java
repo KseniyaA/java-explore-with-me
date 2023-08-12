@@ -15,5 +15,5 @@ public interface RequestService {
     ParticipantRequest cancelRequest(long userId, long requestId);
 
     EventRequestStatusUpdateResult changeRequestsStatus(long userId, long eventId,
-                                                        List<Long> requestsIds, String status);
+                                                        List<Long> requestsIds, RequestStatus status);
 }

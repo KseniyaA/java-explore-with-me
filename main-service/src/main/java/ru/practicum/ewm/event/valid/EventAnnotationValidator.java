@@ -1,11 +1,9 @@
 package ru.practicum.ewm.event.valid;
 
-import ru.practicum.ewm.event.dto.EventDtoRequest;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class EventAnnotationValidator implements ConstraintValidator<ValidateAnnotationEvent, EventDtoRequest> {
+public class EventAnnotationValidator implements ConstraintValidator<ValidateAnnotationEvent, String> {
 
     @Override
     public void initialize(ValidateAnnotationEvent constraintAnnotation) {
@@ -13,9 +11,9 @@ public class EventAnnotationValidator implements ConstraintValidator<ValidateAnn
     }
 
     @Override
-    public boolean isValid(EventDtoRequest eventDtoRequest, ConstraintValidatorContext constraintValidatorContext) {
-        if (eventDtoRequest.getAnnotation() != null) {
-            if (eventDtoRequest.getAnnotation().trim().isEmpty()) {
+    public boolean isValid(String annotation, ConstraintValidatorContext constraintValidatorContext) {
+        if (annotation != null) {
+            if (annotation.trim().isEmpty()) {
                 return false;
             }
         }

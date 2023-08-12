@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.ewm.request.RequestStatus;
 
 import java.util.List;
 
@@ -13,5 +14,5 @@ import java.util.List;
 @Builder
 public class EventRequestStatusUpdateRequestDto {
     private List<Long> requests;
-    private String status;
+    private RequestStatus status;
 }

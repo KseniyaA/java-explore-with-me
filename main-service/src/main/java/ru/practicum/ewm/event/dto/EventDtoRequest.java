@@ -10,10 +10,7 @@ import ru.practicum.ewm.event.valid.ValidateDescriptionEvent;
 import ru.practicum.ewm.event.valid.ValidateEventDateEvent;
 import ru.practicum.ewm.valid.Marker;
 
-import javax.validation.constraints.Future;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 @Data
@@ -24,7 +21,7 @@ public class EventDtoRequest {
 
     @NotBlank(groups = {Marker.OnCreate.class},
         message = "Поле annotation не должно быть пустым")
-    @ValidateAnnotationEvent
+    @ValidateAnnotationEvent(groups = {Marker.OnCreate.class, Marker.OnUpdate.class})
     @Size(min = 20, max = 2000, groups = {Marker.OnCreate.class, Marker.OnUpdate.class})
     private String annotation;
 
@@ -32,13 +29,13 @@ public class EventDtoRequest {
     private Long category;
 
     @NotNull(groups = Marker.OnCreate.class)
-    @ValidateDescriptionEvent
+    @ValidateDescriptionEvent(groups = {Marker.OnCreate.class, Marker.OnUpdate.class})
     @Size(min = 20, max = 7000, groups = {Marker.OnCreate.class, Marker.OnUpdate.class})
     private String description;
 
     @NotNull(groups = {Marker.OnCreate.class})
     @Future(groups = {Marker.OnCreate.class, Marker.OnUpdate.class})
-    @ValidateEventDateEvent
+    @ValidateEventDateEvent(groups = {Marker.OnCreate.class, Marker.OnUpdate.class})
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
 
@@ -47,6 +44,7 @@ public class EventDtoRequest {
 
     private Boolean paid;
 
+    @PositiveOrZero
     private Integer participantLimit; // 0 - без ограничений
 
     /**

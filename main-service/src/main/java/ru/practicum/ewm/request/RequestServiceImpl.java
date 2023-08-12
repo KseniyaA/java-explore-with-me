@@ -65,10 +65,6 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public List<ParticipantRequest> getRequests(long userId, long eventId) {
         Event event = getEventById(eventId);
-        /*if (event.getInitiator().getId().equals(userId)) {
-            throw new ConflictOperationException("Пользователь с id = " + userId + " не является владельцем " +
-                    "события c id = " + eventId);
-        }*/
         return requestRepository.findAllByEvent(event);
 
     }
@@ -85,7 +81,7 @@ public class RequestServiceImpl implements RequestService {
     @Transactional
     @Override
     public EventRequestStatusUpdateResult changeRequestsStatus(long userId, long eventId,
-                                                               List<Long> requestsIds, String status) {
+                                                               List<Long> requestsIds, RequestStatus status) {
         getUserById(userId);
         Event event = getEventById(eventId);
         if (event.getParticipantLimit() != 0 && event.getConfirmedRequests() >= event.getParticipantLimit()) {
@@ -105,7 +101,7 @@ public class RequestServiceImpl implements RequestService {
                 : requestRepository.findAllById(requestsIds);
 
         confirmOrRejectRequests(event, requestForConfirm,
-                status == null ? RequestStatus.CONFIRMED : RequestStatus.valueOf(status));
+                status == null ? RequestStatus.CONFIRMED : status);
 
         List<ParticipantRequest> confirmedOrRejectRequests = requestRepository.findAllById(requestForConfirm
                 .stream().map(ParticipantRequest::getId).collect(Collectors.toList()));

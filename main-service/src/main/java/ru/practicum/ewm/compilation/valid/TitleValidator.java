@@ -1,11 +1,9 @@
 package ru.practicum.ewm.compilation.valid;
 
-import ru.practicum.ewm.compilation.dto.CompilationDtoRequest;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class TitleValidator implements ConstraintValidator<ValidateTitle, CompilationDtoRequest> {
+public class TitleValidator implements ConstraintValidator<ValidateTitle, String> {
 
     @Override
     public void initialize(ValidateTitle constraintAnnotation) {
@@ -13,9 +11,9 @@ public class TitleValidator implements ConstraintValidator<ValidateTitle, Compil
     }
 
     @Override
-    public boolean isValid(CompilationDtoRequest dtoRequest, ConstraintValidatorContext constraintValidatorContext) {
-        if (dtoRequest.getTitle() != null) {
-            if (dtoRequest.getTitle().trim().isEmpty()) {
+    public boolean isValid(String title, ConstraintValidatorContext constraintValidatorContext) {
+        if (title != null) {
+            if (title.trim().isEmpty()) {
                 return false;
             }
         }

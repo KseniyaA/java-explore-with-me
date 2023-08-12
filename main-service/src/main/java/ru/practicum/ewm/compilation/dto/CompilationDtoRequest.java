@@ -15,7 +15,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ValidateTitle
 public class CompilationDtoRequest {
     private Set<Long> events;
 
@@ -23,5 +22,6 @@ public class CompilationDtoRequest {
 
     @NotBlank(message = "Поле title не должно быть пустым", groups = {Marker.OnCreate.class})
     @Size(min = 2, max = 50, groups = {Marker.OnCreate.class, Marker.OnUpdate.class})
+    @ValidateTitle(groups = {Marker.OnCreate.class, Marker.OnUpdate.class})
     private String title;
 }
