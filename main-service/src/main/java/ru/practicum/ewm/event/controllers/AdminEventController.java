@@ -10,10 +10,12 @@ import ru.practicum.ewm.event.EventMapper;
 import ru.practicum.ewm.event.EventService;
 import ru.practicum.ewm.event.dto.EventFullDtoResponse;
 import ru.practicum.ewm.event.dto.UpdateEventAdminRequest;
+import ru.practicum.ewm.request.RequestService;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 @Validated
 public class AdminEventController {
     private final EventService eventService;
+    private final RequestService requestService;
 
     @GetMapping
     public List<EventFullDtoResponse> getAll(@RequestParam(value = "users", required = false) List<Long> users,
@@ -38,7 +41,10 @@ public class AdminEventController {
                         "rangeStart = {}, rangeEnd = {}, from = {}, size = {}",
                 users, states, categories, rangeStart, rangeEnd, from, size);
         List<Event> events = eventService.getAllByParams(users, states, categories, rangeStart, rangeEnd, from, size);
-        return events.stream().map(EventMapper::toEventFullDtoResponse).collect(Collectors.toList());
+        Map<Long, Integer> allConfirmedRequests = requestService.getAllConfirmedRequests();
+        return events.stream()
+                .map(x -> EventMapper.toEventFullDtoResponse(x, allConfirmedRequests.get(x.getId())))
+                .collect(Collectors.toList());
     }
 
     @PatchMapping("/{eventId}")
@@ -47,6 +53,7 @@ public class AdminEventController {
         log.info("Получен запрос PATCH /admin/events/{eventId} с параметрами eventId = {}, " +
                 "dto = {}", eventId, dto);
         Event event = eventService.updateByAdmin(eventId, EventMapper.toEvent(dto));
-        return EventMapper.toEventFullDtoResponse(event);
+        Map<Long, Integer> allConfirmedRequests = requestService.getAllConfirmedRequests();
+        return EventMapper.toEventFullDtoResponse(event, allConfirmedRequests.get(eventId));
     }
 }

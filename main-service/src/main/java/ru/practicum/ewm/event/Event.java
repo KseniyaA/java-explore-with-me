@@ -42,8 +42,6 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private EventStatus eventStatus;
 
-    private Integer confirmedRequests;
-
     private LocalDateTime createdOn;
 
     private LocalDateTime publishedOn;

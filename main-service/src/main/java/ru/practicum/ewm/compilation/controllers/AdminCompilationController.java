@@ -10,7 +10,10 @@ import ru.practicum.ewm.compilation.CompilationMapper;
 import ru.practicum.ewm.compilation.CompilationService;
 import ru.practicum.ewm.compilation.dto.CompilationDtoRequest;
 import ru.practicum.ewm.compilation.dto.CompilationDtoResponse;
+import ru.practicum.ewm.request.RequestService;
 import ru.practicum.ewm.valid.Marker;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/admin/compilations")
@@ -19,13 +22,15 @@ import ru.practicum.ewm.valid.Marker;
 public class AdminCompilationController {
 
     private final CompilationService compilationService;
+    private final RequestService requestService;
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public CompilationDtoResponse add(@RequestBody @Validated(Marker.OnCreate.class) CompilationDtoRequest compilationDtoRequest) {
         log.info("Получен запрос POST /admin/compilations с параметрами dto = {}", compilationDtoRequest);
         Compilation compilation = compilationService.add(CompilationMapper.toCompilation(compilationDtoRequest));
-        return CompilationMapper.toCompilationDtoResponse(compilation);
+        Map<Long, Integer> confirmedRequests = requestService.getAllConfirmedRequests();
+        return CompilationMapper.toCompilationDtoResponse(compilation, confirmedRequests);
     }
 
     @DeleteMapping("/{compId}")
@@ -40,6 +45,7 @@ public class AdminCompilationController {
     public CompilationDtoResponse update(@PathVariable("compId") Long compId,
                                          @RequestBody @Validated(Marker.OnUpdate.class) CompilationDtoRequest dtoRequest) {
         log.info("Получен запрос PATCH /admin/compilations/{compId} с параметрами compId = {}", compId);
-        return CompilationMapper.toCompilationDtoResponse(compilationService.update(compId, dtoRequest));
+        Map<Long, Integer> allConfirmedRequests = requestService.getAllConfirmedRequests();
+        return CompilationMapper.toCompilationDtoResponse(compilationService.update(compId, dtoRequest), allConfirmedRequests);
     }
 }

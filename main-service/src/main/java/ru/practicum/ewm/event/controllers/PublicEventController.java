@@ -8,9 +8,11 @@ import ru.practicum.ewm.event.EventMapper;
 import ru.practicum.ewm.event.EventService;
 import ru.practicum.ewm.event.dto.EventFullDtoResponse;
 import ru.practicum.ewm.event.dto.EventShortDtoResponse;
+import ru.practicum.ewm.request.RequestService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -19,6 +21,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PublicEventController {
     private final EventService eventService;
+
+    private final RequestService requestService;
 
     @GetMapping
     public List<EventShortDtoResponse> getAll(@RequestParam(value = "text", required = false) String text,
@@ -36,13 +40,17 @@ public class PublicEventController {
                 text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort);
         List<Event> events = eventService.getAll(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort,
                 from, size, request);
-        return events.stream().map(EventMapper::toEventShortDtoResponse).collect(Collectors.toList());
+        Map<Long, Integer> allConfirmedRequests = requestService.getAllConfirmedRequests();
+        return events.stream()
+                .map(x -> EventMapper.toEventShortDtoResponse(x, allConfirmedRequests.get(x.getId())))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{eventId}")
     public EventFullDtoResponse get(@PathVariable("eventId") long eventId, HttpServletRequest request) {
         log.info("Получен запрос GET /events/{eventId} с параметрами eventId = {}", eventId);
         Event event = eventService.getPublishedEvent(eventId, request);
-        return EventMapper.toEventFullDtoResponse(event);
+        Map<Long, Integer> allConfirmedRequests = requestService.getAllConfirmedRequests();
+        return EventMapper.toEventFullDtoResponse(event, allConfirmedRequests.get(eventId));
     }
 }

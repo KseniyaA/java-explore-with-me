@@ -20,6 +20,7 @@ import ru.practicum.ewm.request.model.ParticipantRequest;
 import ru.practicum.ewm.valid.Marker;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -38,7 +39,9 @@ public class PrivateEventController {
         log.info("Получен запрос GET /users/{userId}/events с параметрами userId = {}, from = {}, size = {}",
                 userId, from, size);
         List<Event> events = eventService.getAll(userId, from, size);
-        return events.stream().map(EventMapper::toEventShortDtoResponse).collect(Collectors.toList());
+        Map<Long, Integer> allConfirmedRequests = requestService.getAllConfirmedRequests();
+        return events.stream().map(x -> EventMapper.toEventShortDtoResponse(x, allConfirmedRequests.get(x.getId())))
+                .collect(Collectors.toList());
     }
 
     @PostMapping
@@ -47,8 +50,9 @@ public class PrivateEventController {
                                     @RequestBody @Validated(Marker.OnCreate.class) EventDtoRequest dto) {
         log.info("Получен запрос POST /users/{userId}/events с параметрами userId = {}, dto = {}", userId, dto);
         Event event = eventService.add(userId, EventMapper.toEvent(dto));
+        Map<Long, Integer> allConfirmedRequests = requestService.getAllConfirmedRequests();
         log.info("Создан event с id = {}", event.getId());
-        return EventMapper.toEventFullDtoResponse(event);
+        return EventMapper.toEventFullDtoResponse(event, allConfirmedRequests.get(event.getId()));
     }
 
     @GetMapping("/{eventId}")
@@ -56,7 +60,8 @@ public class PrivateEventController {
                                     @PathVariable("eventId") long eventId) {
         log.info("Получен запрос GET /users/{userId}/events/{eventId} с параметрами userId = {}, eventId = {}", userId, eventId);
         Event event = eventService.get(userId, eventId);
-        return EventMapper.toEventFullDtoResponse(event);
+        Map<Long, Integer> allConfirmedRequests = requestService.getAllConfirmedRequests();
+        return EventMapper.toEventFullDtoResponse(event, allConfirmedRequests.get(event.getId()));
     }
 
     @PatchMapping("/{eventId}")
@@ -66,7 +71,8 @@ public class PrivateEventController {
         log.info("Получен запрос PATCH /users/{userId}/events/{eventId} с параметрами userId = {}, eventId = {}, " +
                 "dto = {}", userId, eventId, dto);
         Event event = eventService.update(userId, eventId, EventMapper.toEvent(dto));
-        return EventMapper.toEventFullDtoResponse(event);
+        Map<Long, Integer> allConfirmedRequests = requestService.getAllConfirmedRequests();
+        return EventMapper.toEventFullDtoResponse(event, allConfirmedRequests.get(event.getId()));
     }
 
     @GetMapping("/{eventId}/requests")

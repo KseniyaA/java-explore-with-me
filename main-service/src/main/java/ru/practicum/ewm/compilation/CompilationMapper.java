@@ -7,6 +7,7 @@ import ru.practicum.ewm.event.Event;
 import ru.practicum.ewm.event.EventMapper;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @UtilityClass
@@ -20,11 +21,13 @@ public class CompilationMapper {
                 .build();
     }
 
-    public CompilationDtoResponse toCompilationDtoResponse(Compilation compilation) {
+    public CompilationDtoResponse toCompilationDtoResponse(Compilation compilation, Map<Long, Integer> confirmedRequests) {
         return CompilationDtoResponse.builder()
                 .id(compilation.getId())
                 .events(compilation.getEvents() == null || compilation.getEvents().isEmpty() ? Collections.emptyList()
-                        : compilation.getEvents().stream().map(EventMapper::toEventShortDtoResponse).collect(Collectors.toList()))
+                        : compilation.getEvents()
+                        .stream().map(x -> EventMapper.toEventShortDtoResponse(x, confirmedRequests.get(x.getId())))
+                        .collect(Collectors.toList()))
                 .pinned(compilation.getPinned())
                 .title(compilation.getTitle())
                 .build();

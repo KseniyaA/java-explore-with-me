@@ -16,6 +16,7 @@ import ru.practicum.ewm.user.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,9 +41,6 @@ public class RequestServiceImpl implements RequestService {
         RequestStatus requestStatus;
         if (!event.getRequestModeration() || event.getParticipantLimit() == 0) {
             requestStatus = RequestStatus.CONFIRMED;
-            Integer confirmedRequests = event.getConfirmedRequests();
-            event.setConfirmedRequests(++confirmedRequests);
-            eventRepository.save(event);
         } else {
             requestStatus = RequestStatus.PENDING;
         }
@@ -84,7 +82,8 @@ public class RequestServiceImpl implements RequestService {
                                                                List<Long> requestsIds, RequestStatus status) {
         getUserById(userId);
         Event event = getEventById(eventId);
-        if (event.getParticipantLimit() != 0 && event.getConfirmedRequests() >= event.getParticipantLimit()) {
+        List<ParticipantRequest> confirmedRequests = getConfirmedRequests(event);
+        if (event.getParticipantLimit() != 0 && confirmedRequests.size() >= event.getParticipantLimit()) {
             throw new ConflictOperationException("Достигнут лимит по заявкам на данное событие");
         }
 
@@ -116,23 +115,31 @@ public class RequestServiceImpl implements RequestService {
                 .build();
     }
 
+    @Override
+    public List<ParticipantRequest> getConfirmedRequests(Event event) {
+        return requestRepository.findAllByEventAndStatus(event, RequestStatus.CONFIRMED);
+    }
+
+    @Override
+    public Map<Long, Integer> getAllConfirmedRequests() {
+        List<RequestsByStatus> eventRequestsByStatus = requestRepository.getEventRequestsByStatus(RequestStatus.CONFIRMED.name());
+        return eventRequestsByStatus.stream()
+                .collect(Collectors.toMap(RequestsByStatus::getEventId, RequestsByStatus::getRequestsSize));
+    }
+
     @Transactional
-    private Boolean confirmOrRejectRequests(Event event, List<ParticipantRequest> requests, RequestStatus status) {
-        Boolean result = Boolean.TRUE;
-        Integer confirmedRequests = event.getConfirmedRequests();
+    private void confirmOrRejectRequests(Event event, List<ParticipantRequest> requests, RequestStatus status) {
+        int confirmedRequests = getConfirmedRequests(event).size();
         if (requests != null) {
             for (ParticipantRequest request : requests) {
                 if (status.equals(RequestStatus.CONFIRMED)) {
                     if (confirmedRequests < event.getParticipantLimit()) {
                         if (request.getStatus().equals(RequestStatus.PENDING)) {
                             request.setStatus(RequestStatus.CONFIRMED);
-                            event.setConfirmedRequests(++confirmedRequests);
-                            eventRepository.save(event);
                             requestRepository.save(request);
                         }
                     } else {
                         request.setStatus(RequestStatus.REJECTED);
-                        result = Boolean.FALSE;
                         requestRepository.save(request);
                     }
                 } else {
@@ -141,7 +148,6 @@ public class RequestServiceImpl implements RequestService {
                 }
             }
         }
-        return result;
     }
 
     @Transactional
@@ -156,7 +162,7 @@ public class RequestServiceImpl implements RequestService {
         if (!EventStatus.PUBLISHED.equals(event.getEventStatus())) {
             throw new ConflictOperationException("Нельзя участвовать в неопубликованном событии");
         }
-        if (event.getParticipantLimit() != 0 && event.getParticipantLimit().equals(event.getConfirmedRequests())) {
+        if (event.getParticipantLimit() != 0 && event.getParticipantLimit().equals(getConfirmedRequests(event).size())) {
             throw new ConflictOperationException("Достигнут лимит запросов");
         }
     }

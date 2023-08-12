@@ -26,7 +26,6 @@ CREATE TABLE IF NOT EXISTS event (
     request_moderation BOOLEAN DEFAULT TRUE,
     title CHARACTER VARYING(120) NOT NULL,
     status CHARACTER VARYING(20) NOT NULL,
-    confirmed_requests BIGINT,
     created_on timestamp WITHOUT TIME ZONE NOT NULL,
     published_on timestamp WITHOUT TIME ZONE,
     initiator_id BIGINT NOT NULL,

@@ -40,12 +40,12 @@ public class EventMapper {
                 .build();
     }
 
-    public EventFullDtoResponse toEventFullDtoResponse(Event event) {
+    public EventFullDtoResponse toEventFullDtoResponse(Event event, Integer confirmedRequests) {
         return EventFullDtoResponse.builder()
                 .id(event.getId())
                 .annotation(event.getAnnotation())
                 .category(CategoryMapper.toCategoryDtoResponse(event.getCategory()))
-                .confirmedRequests(event.getConfirmedRequests())
+                .confirmedRequests(confirmedRequests == null ? 0 : confirmedRequests)
                 .createdOn(event.getCreatedOn())
                 .description(event.getDescription())
                 .eventDate(event.getEventDate())
@@ -61,12 +61,12 @@ public class EventMapper {
                 .build();
     }
 
-    public EventShortDtoResponse toEventShortDtoResponse(Event event) {
+    public EventShortDtoResponse toEventShortDtoResponse(Event event, Integer confirmedRequests) {
         return EventShortDtoResponse.builder()
                 .id(event.getId())
                 .annotation(event.getAnnotation())
                 .category(CategoryMapper.toCategoryDtoResponse(event.getCategory()))
-                .confirmedRequests(event.getConfirmedRequests())
+                .confirmedRequests(confirmedRequests == null ? 0 : confirmedRequests)
                 .eventDate(event.getEventDate())
                 .paid(event.getPaid())
                 .title(event.getTitle())

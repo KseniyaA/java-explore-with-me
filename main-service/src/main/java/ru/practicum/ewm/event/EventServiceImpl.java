@@ -16,6 +16,9 @@ import ru.practicum.ewm.exception.BadParameterException;
 import ru.practicum.ewm.exception.ConflictOperationException;
 import ru.practicum.ewm.exception.EntityNotFoundException;
 import ru.practicum.ewm.exception.UnavailableOperationException;
+import ru.practicum.ewm.request.RequestRepository;
+import ru.practicum.ewm.request.RequestStatus;
+import ru.practicum.ewm.request.RequestsByStatus;
 import ru.practicum.ewm.stats.StatsClientProvider;
 import ru.practicum.ewm.user.User;
 import ru.practicum.ewm.user.UserRepository;
@@ -37,6 +40,7 @@ public class EventServiceImpl implements EventService {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final RequestRepository requestRepository;
 
     @Value("${main.service.app}")
     private String mainServiceApp;
@@ -54,7 +58,6 @@ public class EventServiceImpl implements EventService {
         event.setCreatedOn(LocalDateTime.now());
         event.setEventStatus(EventStatus.CREATED);
         event.setViews(0);
-        event.setConfirmedRequests(0);
         if (event.getPaid() == null) {
             event.setPaid(Boolean.FALSE);
         }
@@ -129,6 +132,12 @@ public class EventServiceImpl implements EventService {
         return eventRepository.findByInitiator(initiator, page).getContent();
     }
 
+    private Map<Long, Integer> getAllConfirmedRequests() {
+        List<RequestsByStatus> eventRequestsByStatus = requestRepository.getEventRequestsByStatus(RequestStatus.CONFIRMED.name());
+        return eventRequestsByStatus.stream()
+                .collect(Collectors.toMap(RequestsByStatus::getEventId, RequestsByStatus::getRequestsSize));
+    }
+
     @Override
     public List<Event> getAll(String text, List<Long> categories, Boolean paid, String rangeStart, String rangeEnd,
                               Boolean onlyAvailable, String sort, Integer from, Integer size, HttpServletRequest request) {
@@ -159,8 +168,13 @@ public class EventServiceImpl implements EventService {
             expr = expr.and(startExpr);
         }
         if (onlyAvailable) {
-            BooleanExpression reqExpr = QEvent.event.confirmedRequests.lt(QEvent.event.participantLimit);
-            expr = expr.and(reqExpr);
+            BooleanExpression expr1 = QEvent.event.participantLimit.eq(0)
+                    .or(QEvent.event.requestModeration.eq(Boolean.FALSE));
+            Map<Long, Integer> allConfirmedRequests = getAllConfirmedRequests();
+            BooleanExpression expr2 = QEvent.event.participantLimit.ne(0)
+                    .and(QEvent.event.requestModeration.eq(Boolean.TRUE))
+                    .and(QEvent.event.participantLimit.lt(allConfirmedRequests.get(Long.valueOf(QEvent.event.id.toString()))));
+            expr = expr.and(expr1.or(expr2));
         }
         Sort sortBy;
         Pageable page;
