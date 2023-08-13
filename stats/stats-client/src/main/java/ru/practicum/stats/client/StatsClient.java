@@ -39,10 +39,9 @@ public class StatsClient extends BaseClient {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("start", start.format(DATE_TIME_FORMATTER));
         parameters.put("end", end.format(DATE_TIME_FORMATTER));
-        parameters.put("uri", uri.stream().map(String::valueOf).collect(Collectors.joining(",")));
+        parameters.put("uris", uri.stream().map(String::valueOf).collect(Collectors.joining(",")));
         parameters.put("unique", unique);
 
-
-        return get("/stats?start={start}&end={end}&uri={uri}&unique={unique}", parameters);
+        return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
     }
 }

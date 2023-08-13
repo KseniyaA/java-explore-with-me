@@ -30,10 +30,10 @@ public class StatsController {
     @GetMapping("/stats")
     private List<ViewStats> getStats(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
                                      @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
-                                     @RequestParam(required = false) String uri,
+                                     @RequestParam(required = false) String uris,
                                      @RequestParam(required = false) Boolean unique) {
-        log.info("Получен запрос GET /stats с параметрами start = {}, end = {}, url = {}, unique = {}", start, end, uri, unique);
-        List<String> uriList = uri == null ? Collections.emptyList() : Arrays.asList(uri.split(","));
+        log.info("Получен запрос GET /stats с параметрами start = {}, end = {}, url = {}, unique = {}", start, end, uris, unique);
+        List<String> uriList = uris == null ? Collections.emptyList() : Arrays.asList(uris.split(","));
         List<ViewStats> stats = statsService.getStats(start, end, uriList, unique);
         return stats;
     }
