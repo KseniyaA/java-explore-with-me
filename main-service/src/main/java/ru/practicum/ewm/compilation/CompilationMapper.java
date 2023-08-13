@@ -26,7 +26,7 @@ public class CompilationMapper {
                 .id(compilation.getId())
                 .events(compilation.getEvents() == null || compilation.getEvents().isEmpty() ? Collections.emptyList()
                         : compilation.getEvents()
-                        .stream().map(x -> EventMapper.toEventShortDtoResponse(x, confirmedRequests.get(x.getId())))
+                        .stream().map(x -> EventMapper.toEventShortDtoResponse(x, confirmedRequests.getOrDefault(x.getId(), 0)))
                         .collect(Collectors.toList()))
                 .pinned(compilation.getPinned())
                 .title(compilation.getTitle())

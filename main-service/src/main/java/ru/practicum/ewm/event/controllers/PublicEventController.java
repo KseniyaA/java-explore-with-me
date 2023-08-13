@@ -42,7 +42,7 @@ public class PublicEventController {
                 from, size, request);
         Map<Long, Integer> allConfirmedRequests = requestService.getAllConfirmedRequests();
         return events.stream()
-                .map(x -> EventMapper.toEventShortDtoResponse(x, allConfirmedRequests.get(x.getId())))
+                .map(x -> EventMapper.toEventShortDtoResponse(x, allConfirmedRequests.getOrDefault(x.getId(), 0)))
                 .collect(Collectors.toList());
     }
 
@@ -51,6 +51,6 @@ public class PublicEventController {
         log.info("Получен запрос GET /events/{eventId} с параметрами eventId = {}", eventId);
         Event event = eventService.getPublishedEvent(eventId, request);
         Map<Long, Integer> allConfirmedRequests = requestService.getAllConfirmedRequests();
-        return EventMapper.toEventFullDtoResponse(event, allConfirmedRequests.get(eventId));
+        return EventMapper.toEventFullDtoResponse(event, allConfirmedRequests.getOrDefault(eventId, 0));
     }
 }

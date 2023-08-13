@@ -30,21 +30,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public Category update(Category newCategory) {
-        /*List<Category> categoriesByName = categoryRepository.findAll().stream()
-                .filter(x -> x.getName().toLowerCase().equals(newCategory.getName().toLowerCase())
-                        && !x.getId().equals(newCategory.getId()))
-                .collect(Collectors.toList());
-        if (!categoriesByName.isEmpty()) {
-            throw new ConflictOperationException("Категория с наименованием = " + newCategory.getName() + " уже существует");
-        }*/
         return categoryRepository.save(newCategory);
     }
 
     @Transactional
     @Override
     public void delete(Long id) {
-//        boolean existsByCategory = ;
-//        List<Event> eventsByCategory = eventRepository.findByCategory(getById(id));
         if (eventRepository.existsByCategory(getById(id))) {
             throw new ConflictOperationException("Удаление невозможно, так как существуют события по данной категории");
         }
