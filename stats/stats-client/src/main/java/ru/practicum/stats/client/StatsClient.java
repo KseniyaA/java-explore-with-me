@@ -10,13 +10,16 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.stats.dto.EndpointHitDtoRequest;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
 public class StatsClient extends BaseClient {
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public StatsClient(String statsServerUrl) {
         super(
@@ -34,11 +37,11 @@ public class StatsClient extends BaseClient {
 
     public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, List<String> uri, Boolean unique) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("start", start);
-        parameters.put("end", end);
-        parameters.put("uri", uri);
+        parameters.put("start", start.format(DATE_TIME_FORMATTER));
+        parameters.put("end", end.format(DATE_TIME_FORMATTER));
+        parameters.put("uris", uri.stream().map(String::valueOf).collect(Collectors.joining(",")));
         parameters.put("unique", unique);
 
-        return get("/stats", parameters);
+        return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
     }
 }
