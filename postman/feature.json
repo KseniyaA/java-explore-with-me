@@ -79,9 +79,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/admin/location",
+					"raw": "{{baseUrl}}/admin/location",
 					"host": [
-						"{{base_url}}"
+						"{{baseUrl}}"
 					],
 					"path": [
 						"admin",
@@ -137,9 +137,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/admin/location",
+					"raw": "{{baseUrl}}/admin/location",
 					"host": [
-						"{{base_url}}"
+						"{{baseUrl}}"
 					],
 					"path": [
 						"admin",
@@ -201,9 +201,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/admin/location",
+					"raw": "{{baseUrl}}/admin/location",
 					"host": [
-						"{{base_url}}"
+						"{{baseUrl}}"
 					],
 					"path": [
 						"admin",
@@ -260,9 +260,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/admin/location",
+					"raw": "{{baseUrl}}/admin/location",
 					"host": [
-						"{{base_url}}"
+						"{{baseUrl}}"
 					],
 					"path": [
 						"admin",
@@ -353,9 +353,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/admin/location",
+					"raw": "{{baseUrl}}/admin/location",
 					"host": [
-						"{{base_url}}"
+						"{{baseUrl}}"
 					],
 					"path": [
 						"admin",
@@ -447,9 +447,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/admin/location",
+					"raw": "{{baseUrl}}/admin/location",
 					"host": [
-						"{{base_url}}"
+						"{{baseUrl}}"
 					],
 					"path": [
 						"admin",
@@ -505,9 +505,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/admin/location",
+					"raw": "{{baseUrl}}/admin/location",
 					"host": [
-						"{{base_url}}"
+						"{{baseUrl}}"
 					],
 					"path": [
 						"admin",
@@ -613,9 +613,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/admin/location/{{location_id}}",
+					"raw": "{{baseUrl}}/admin/location/{{location_id}}",
 					"host": [
-						"{{base_url}}"
+						"{{baseUrl}}"
 					],
 					"path": [
 						"admin",
@@ -675,9 +675,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/admin/location/100",
+					"raw": "{{baseUrl}}/admin/location/100",
 					"host": [
-						"{{base_url}}"
+						"{{baseUrl}}"
 					],
 					"path": [
 						"admin",
@@ -771,9 +771,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/admin/location",
+					"raw": "{{baseUrl}}/admin/location",
 					"host": [
-						"{{base_url}}"
+						"{{baseUrl}}"
 					],
 					"path": [
 						"admin",
@@ -889,9 +889,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/admin/location/{{location_id}}",
+					"raw": "{{baseUrl}}/admin/location/{{location_id}}",
 					"host": [
-						"{{base_url}}"
+						"{{baseUrl}}"
 					],
 					"path": [
 						"admin",
@@ -974,9 +974,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/admin/location/{{location_id}}",
+					"raw": "{{baseUrl}}/admin/location/{{location_id}}",
 					"host": [
-						"{{base_url}}"
+						"{{baseUrl}}"
 					],
 					"path": [
 						"admin",
@@ -1033,9 +1033,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/admin/location/100",
+					"raw": "{{baseUrl}}/admin/location/100",
 					"host": [
-						"{{base_url}}"
+						"{{baseUrl}}"
 					],
 					"path": [
 						"admin",
@@ -1144,9 +1144,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/events/location?lat=55.0305309&lon=82.9248216&radius=0.700",
+					"raw": "{{baseUrl}}/events/location?lat=55.0305309&lon=82.9248216&radius=0.700",
 					"host": [
-						"{{base_url}}"
+						"{{baseUrl}}"
 					],
 					"path": [
 						"events",
@@ -1262,9 +1262,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/events/location?lat=54.851725&lon=83.094067&radius=0.700",
+					"raw": "{{baseUrl}}/events/location?lat=54.851725&lon=83.094067&radius=0.700",
 					"host": [
-						"{{base_url}}"
+						"{{baseUrl}}"
 					],
 					"path": [
 						"events",
