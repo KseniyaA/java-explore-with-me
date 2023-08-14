@@ -237,6 +237,12 @@ public class EventServiceImpl implements EventService {
         return eventById;
     }
 
+    @Override
+    public List<Event> getEventsByLocation(Double lat, Double lon, Double radius) {
+        List<Event> eventsByLocation = eventRepository.getEventsByLocation(lat, lon, radius);
+        return eventsByLocation;
+    }
+
     private Integer getViewsByEvent(Event event, HttpServletRequest request) {
         LocalDateTime endDate = LocalDateTime.now().plusHours(1);
         ResponseEntity<Object> stats = statsClientProvider.getClient().getStats(event.getCreatedOn(),

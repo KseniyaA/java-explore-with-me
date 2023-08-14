@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PublicEventController {
     private final EventService eventService;
-
     private final RequestService requestService;
 
     @GetMapping
@@ -52,5 +51,17 @@ public class PublicEventController {
         Event event = eventService.getPublishedEvent(eventId, request);
         Map<Long, Integer> allConfirmedRequests = requestService.getAllConfirmedRequests();
         return EventMapper.toEventFullDtoResponse(event, allConfirmedRequests.getOrDefault(eventId, 0));
+    }
+
+    @GetMapping("/location")
+    public List<EventShortDtoResponse> getAllByLocation(@RequestParam(value = "lat") Double lat,
+                                                        @RequestParam(value = "lon") Double lon,
+                                                        @RequestParam(value = "radius") Double radius) {
+        log.info("Получен запрос GET /events/location с параметрами lat = {}, lon = {}, radius = {}", lat, lon, radius);
+        List<Event> eventsByLocation = eventService.getEventsByLocation(lat, lon, radius);
+        Map<Long, Integer> allConfirmedRequests = requestService.getAllConfirmedRequests();
+        return eventsByLocation.stream()
+                .map(x -> EventMapper.toEventShortDtoResponse(x, allConfirmedRequests.getOrDefault(x.getId(), 0)))
+                .collect(Collectors.toList());
     }
 }
