@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import ru.practicum.ewm.location.valid.ValidateLocationName;
 import ru.practicum.ewm.valid.Marker;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 

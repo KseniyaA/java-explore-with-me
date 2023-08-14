@@ -3,7 +3,6 @@ package ru.practicum.ewm.location;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "location"/*, schema = "public"*/)
