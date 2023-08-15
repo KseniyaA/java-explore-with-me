@@ -4,6 +4,8 @@ import lombok.experimental.UtilityClass;
 import ru.practicum.ewm.category.Category;
 import ru.practicum.ewm.category.CategoryMapper;
 import ru.practicum.ewm.event.dto.*;
+import ru.practicum.ewm.location.LocationParam;
+import ru.practicum.ewm.location.LocationParamMapper;
 import ru.practicum.ewm.user.UserMapper;
 
 @UtilityClass
@@ -20,6 +22,8 @@ public class EventMapper {
                 .title(dto.getTitle())
                 .location(dto.getLocation() != null ? Location.builder().lat(dto.getLocation().getLat())
                         .lon(dto.getLocation().getLon()).build() : null)
+                .locationParam(dto.getLocationParamId() != null
+                        ? LocationParam.builder().id(dto.getLocationParamId()).build() : null)
                 .stateAction(dto.getStateAction() == null ? null : EventStateAction.valueOf(dto.getStateAction()))
                 .build();
     }
@@ -36,6 +40,8 @@ public class EventMapper {
                 .title(dto.getTitle())
                 .location(dto.getLocation() != null ? Location.builder().lat(dto.getLocation().getLat())
                         .lon(dto.getLocation().getLon()).build() : null)
+                .locationParam(dto.getLocationParamId() != null
+                        ? LocationParam.builder().id(dto.getLocationParamId()).build() : null)
                 .stateAction(dto.getStateAction() == null ? null : EventStateAction.valueOf(dto.getStateAction()))
                 .build();
     }
@@ -50,6 +56,9 @@ public class EventMapper {
                 .description(event.getDescription())
                 .eventDate(event.getEventDate())
                 .location(LocationDto.builder().lat(event.getLocation().getLat()).lon(event.getLocation().getLon()).build())
+                .locationParam(event.getLocationParam() != null
+                        ? LocationParamMapper.toLocationDtoResponse(event.getLocationParam())
+                        : null)
                 .paid(event.getPaid())
                 .participantLimit(event.getParticipantLimit())
                 .publishedOn(event.getPublishedOn())

@@ -33,6 +33,8 @@ public class UpdateEventAdminRequest {
 
     private LocationDto location;
 
+    private Long locationParamId;
+
     private Boolean paid;
 
     @PositiveOrZero

@@ -31,8 +31,10 @@ CREATE TABLE IF NOT EXISTS event (
     initiator_id BIGINT NOT NULL,
     lat DOUBLE PRECISION NOT NULL,
     lon DOUBLE PRECISION NOT NULL,
+    location_id BIGINT,
     CONSTRAINT fk_event_to_category FOREIGN KEY(category_id) REFERENCES category(id),
-    CONSTRAINT fk_event_to_initiator FOREIGN KEY(initiator_id) REFERENCES users(id) --,
+    CONSTRAINT fk_event_to_initiator FOREIGN KEY(initiator_id) REFERENCES users(id),
+    CONSTRAINT fk_event_to_location FOREIGN KEY(location_id) REFERENCES location(id)
 );
 
 DROP TABLE IF EXISTS request CASCADE;

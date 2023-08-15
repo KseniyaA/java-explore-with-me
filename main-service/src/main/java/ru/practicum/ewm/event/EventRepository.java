@@ -19,7 +19,8 @@ public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPre
 
     @Query(value = "select e.* " +
             "from event as e " +
-            "where distance(e.lat, e.lon, ?1, ?2) <= ?3 " +
+            "left join location as l on e.location_id = l.id " +
+            "where distance(l.lat, l.lon, ?1, ?2) <= ?3 " +
             "and e.status = 'PUBLISHED'", nativeQuery = true)
     List<Event> getEventsByLocation(Double lat, Double lon, Double radius);
 }

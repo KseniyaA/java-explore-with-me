@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.ewm.category.dto.CategoryDtoResponse;
+import ru.practicum.ewm.location.dto.LocationParamDtoResponse;
 import ru.practicum.ewm.user.dto.UserShortDtoResponse;
 
 import java.time.LocalDateTime;
@@ -34,6 +35,8 @@ public class EventFullDtoResponse {
     private UserShortDtoResponse initiator;
 
     private LocationDto location;
+
+    private LocationParamDtoResponse locationParam;
 
     private Boolean paid;
 
