@@ -9,7 +9,7 @@ public interface LocationParamService {
 
     LocationParam getById(long id);
 
-    List<LocationParam> getAll();
+    List<LocationParam> getAll(Integer from, Integer size);
 
     void deleteById(long locationParamId);
 

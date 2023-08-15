@@ -2,6 +2,10 @@ package ru.practicum.ewm.location;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.exception.EntityNotFoundException;
@@ -31,10 +35,22 @@ public class LocationParamServiceImpl implements LocationParamService {
 
     @Transactional
     private void merge(LocationParam oldLocationParam, LocationParam newLocationParam) {
-        oldLocationParam.setLat(newLocationParam.getLat() == null ? oldLocationParam.getLat() : newLocationParam.getLat());
-        oldLocationParam.setLon(newLocationParam.getLon() == null ? oldLocationParam.getLon() : newLocationParam.getLon());
-        oldLocationParam.setRadius(newLocationParam.getRadius() == null ? oldLocationParam.getRadius() : newLocationParam.getRadius());
-        oldLocationParam.setName(newLocationParam.getName() == null ? oldLocationParam.getName() : newLocationParam.getName());
+        Double lat = newLocationParam.getLat();
+        if (lat != null) {
+            oldLocationParam.setLat(lat);
+        }
+        Double lon = newLocationParam.getLon();
+        if (lon != null) {
+            oldLocationParam.setLon(lon);
+        }
+        Double radius = newLocationParam.getRadius();
+        if (radius != null) {
+            oldLocationParam.setRadius(radius);
+        }
+        String name = newLocationParam.getName();
+        if (name != null && !name.isBlank()) {
+            oldLocationParam.setName(name);
+        }
     }
 
     public LocationParam getById(long id) {
@@ -44,8 +60,10 @@ public class LocationParamServiceImpl implements LocationParamService {
     }
 
     @Override
-    public List<LocationParam> getAll() {
-        return locationParamRepository.findAll();
+    public List<LocationParam> getAll(Integer from, Integer size) {
+        Pageable page = PageRequest.of(from / size, size, Sort.by("id").ascending());
+        Page<LocationParam> locations = locationParamRepository.findAll(page);
+        return locations.getContent();
     }
 
     @Transactional

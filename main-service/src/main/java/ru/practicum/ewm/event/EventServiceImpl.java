@@ -17,7 +17,6 @@ import ru.practicum.ewm.exception.BadParameterException;
 import ru.practicum.ewm.exception.ConflictOperationException;
 import ru.practicum.ewm.exception.EntityNotFoundException;
 import ru.practicum.ewm.exception.UnavailableOperationException;
-import ru.practicum.ewm.location.LocationParamRepository;
 import ru.practicum.ewm.request.RequestRepository;
 import ru.practicum.ewm.request.RequestStatus;
 import ru.practicum.ewm.request.RequestsByStatus;

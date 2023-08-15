@@ -56,9 +56,10 @@ public class AdminLocationParamController {
     }
 
     @GetMapping
-    public List<LocationParamDtoResponse> getAll() {
-        log.info("Получен запрос GET /admin/location");
-        List<LocationParam> locationParam = locationParamService.getAll();
+    public List<LocationParamDtoResponse> getAll(@RequestParam(defaultValue = "0") Integer from,
+                                                 @RequestParam(defaultValue = "10") Integer size) {
+        log.info("Получен запрос GET /admin/location с параметрами from = {}, size = {}", from, size);
+        List<LocationParam> locationParam = locationParamService.getAll(from, size);
         return locationParam.stream().map(LocationParamMapper::toLocationDtoResponse).collect(Collectors.toList());
     }
 }

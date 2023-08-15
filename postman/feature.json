@@ -690,7 +690,7 @@
 			"response": []
 		},
 		{
-			"name": "Получение всех локаций",
+			"name": "Получение всех локаций без указания from size",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -701,10 +701,11 @@
 							"    const rnd = new RandomUtils();\r",
 							"\r",
 							"    try {\r",
-							"        const locationBody = rnd.getLocation();\r",
-							"        const location = await api.addLocation(locationBody);\r",
-							"        pm.collectionVariables.set(\"location\", location);\r",
-							"        pm.collectionVariables.set(\"location_id\", location.id);\r",
+							"        let locationBody;\r",
+							"        for (let i = 0; i < 15; i++) { \r",
+							"            locationBody = rnd.getLocation();\r",
+							"            await api.addLocation(locationBody);\r",
+							"        }\r",
 							"    } catch(err) {\r",
 							"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
 							"    }\r",
@@ -740,9 +741,9 @@
 							"});\r",
 							"\r",
 							"const target = pm.response.json();\r",
-							"\r",
-							"pm.test(\"Проверка на количество созданных локаций\", function () {\r",
-							"    pm.expect(target.length).not.equal(0);\r",
+							"console.log(target.length)\r",
+							"pm.test(\"Проверка на количество возвращенных локаций\", function () {\r",
+							"    pm.expect(target.length).equal(10);\r",
 							"});\r",
 							""
 						],
@@ -778,6 +779,124 @@
 					"path": [
 						"admin",
 						"location"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "0",
+							"disabled": true
+						},
+						{
+							"key": "size",
+							"value": "1000",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Обратите внимание:\n- нельзя добавить повторный запрос\n- инициатор события не может добавить запрос на участие в своём событии\n- нельзя участвовать в неопубликованном событии\n- если у события достигнут лимит запросов на участие - необходимо вернуть ошибку\n- если для события отключена пре-модерация запросов на участие, то запрос должен автоматически перейти в состояние подтвержденного"
+			},
+			"response": []
+		},
+		{
+			"name": "Получение всех локаций с параметрами from size Copy",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const main = async () => {\r",
+							"    const api = new API(pm);\r",
+							"    const rnd = new RandomUtils();\r",
+							"\r",
+							"    try {\r",
+							"        let locationBody;\r",
+							"        for (let i = 0; i < 10; i++) { \r",
+							"            locationBody = rnd.getLocation();\r",
+							"            await api.addLocation(locationBody);\r",
+							"        }\r",
+							"    } catch(err) {\r",
+							"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
+							"    }\r",
+							"};\r",
+							"\r",
+							"const interval = setInterval(() => {}, 1000);\r",
+							"\r",
+							"setTimeout(async () => \r",
+							"    {\r",
+							"        try {\r",
+							"            // выполняем наш скрипт\r",
+							"            await main();\r",
+							"        } catch (e) {\r",
+							"            console.error(e);\r",
+							"        } finally {\r",
+							"            clearInterval(interval);\r",
+							"        }\r",
+							"    },  \r",
+							"    100 \r",
+							");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(200);   \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"const target = pm.response.json();\r",
+							"console.log(target.length)\r",
+							"pm.test(\"Проверка на количество возвращенных локаций\", function () {\r",
+							"    pm.expect(target.length).equal(5);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/admin/location?from=0&size=5",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"location"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "5"
+						}
 					]
 				},
 				"description": "Обратите внимание:\n- нельзя добавить повторный запрос\n- инициатор события не может добавить запрос на участие в своём событии\n- нельзя участвовать в неопубликованном событии\n- если у события достигнут лимит запросов на участие - необходимо вернуть ошибку\n- если для события отключена пре-модерация запросов на участие, то запрос должен автоматически перейти в состояние подтвержденного"
@@ -1048,6 +1167,137 @@
 			"response": []
 		},
 		{
+			"name": "Добавление нового события в конкретной локации",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const main = async () => {\r",
+							"    const api = new API(pm);\r",
+							"    const rnd = new RandomUtils();\r",
+							"\r",
+							"    let eventBody;\r",
+							"    try {\r",
+							"        const user = await api.addUser(rnd.getUser());\r",
+							"        pm.collectionVariables.set(\"uid\", user.id)\r",
+							"        const category = await api.addCategory(rnd.getCategory());\r",
+							"        const locationBody = rnd.getLocation();\r",
+							"        const location = await api.addLocation(locationBody);\r",
+							"        // Формируем тело запроса с наличие поля для локации\r",
+							"        pm.collectionVariables.set(\"event_location_id\", location.id);\r",
+							"        eventBody = rnd.getEvent(category.id, location.id);\r",
+							"    } catch(err) {\r",
+							"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
+							"    }\r",
+							"\r",
+							"    pm.request.body.update({\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify(eventBody),\r",
+							"        options: { raw: { language: 'json' } }\r",
+							"    });\r",
+							"};\r",
+							"\r",
+							"const interval = setInterval(() => {}, 1000);\r",
+							"\r",
+							"setTimeout(async () => \r",
+							"    {\r",
+							"        try {\r",
+							"            await main();\r",
+							"        } catch (e) {\r",
+							"            console.error(e);\r",
+							"        } finally {\r",
+							"            clearInterval(interval);\r",
+							"        }\r",
+							"    },  \r",
+							"    100 \r",
+							");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(201);  \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"const target = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Событие должно содержать поля: id, title, annotation, category, paid, eventDate, initiator, description, participantLimit, state, createdOn, location, requestModeration, locationParam\", function () {\r",
+							"pm.expect(target).to.have.property('id');\r",
+							"pm.expect(target).to.have.property('title');\r",
+							"pm.expect(target).to.have.property('annotation');\r",
+							"pm.expect(target).to.have.property('category');\r",
+							"pm.expect(target).to.have.property('paid');\r",
+							"pm.expect(target).to.have.property('eventDate');\r",
+							"pm.expect(target).to.have.property('initiator');\r",
+							"pm.expect(target).to.have.property('description');\r",
+							"pm.expect(target).to.have.property('participantLimit');\r",
+							"pm.expect(target).to.have.property('state');\r",
+							"pm.expect(target).to.have.property('createdOn');\r",
+							"pm.expect(target).to.have.property('location');\r",
+							"pm.expect(target).to.have.property('requestModeration');\r",
+							"pm.expect(target).to.have.property('locationParam');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Данные в ответе по локации события должны соответствовать данным в запросе\", function () {\r",
+							"    pm.expect(target.id).to.not.be.null;\r",
+							"    pm.expect(target.locationParam.id.toString()).equal(pm.collectionVariables.get(\"event_location_id\").toString(), 'Локация события в ответе должна соответствовать локации события в запросе');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:userId/events",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":userId",
+						"events"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "{{uid}}",
+							"description": "(Required) id текущего пользователя"
+						}
+					]
+				},
+				"description": "Обратите внимание: дата и время на которые намечено событие не может быть раньше, чем через два часа от текущего момента"
+			},
+			"response": []
+		},
+		{
 			"name": "Получение событий по локации",
 			"event": [
 				{
@@ -1064,10 +1314,13 @@
 							"        const user = await api.addUser(rnd.getUser());\r",
 							"        // Создаем категорию\r",
 							"        const category = await api.addCategory(rnd.getCategory());\r",
+							"        // Формируем локацию\r",
+							"        const locationBody = rnd.getLocation();\r",
+							"        locationBody.lat=55.030481;\r",
+							"        locationBody.lon=82.923777;\r",
+							"        const location = await api.addLocation(locationBody);\r",
 							"        // Формируем тело с нужными координатами и отправляем запрос на создание События\r",
-							"        let eventBody = rnd.getEvent(category.id);\r",
-							"        eventBody.location.lat=55.025470;\r",
-							"        eventBody.location.lon=82.928375;\r",
+							"        let eventBody = rnd.getEvent(category.id, location.id);\r",
 							"        const event = await api.addEvent(user.id, eventBody);\r",
 							"        // Публикуем событие\r",
 							"        await api.publishEvent(event.id);\r",
@@ -1076,7 +1329,6 @@
 							"    } catch(err) {\r",
 							"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
 							"    }\r",
-							"\r",
 							"};\r",
 							"\r",
 							"const interval = setInterval(() => {}, 1000);\r",
@@ -1402,7 +1654,7 @@
 					"        }",
 					"    }",
 					"",
-					"    getEvent(categoryId) {",
+					"    getEvent(categoryId, locationId) {",
 					"        return {",
 					"            annotation: pm.variables.replaceIn('{{$randomLoremParagraph}}'),",
 					"            category: categoryId,",
@@ -1412,6 +1664,7 @@
 					"                lat: parseFloat(pm.variables.replaceIn('{{$randomLatitude}}')),",
 					"                lon: parseFloat(pm.variables.replaceIn('{{$randomLongitude}}')),",
 					"            },",
+					"            locationParamId: locationId,",
 					"            paid: pm.variables.replaceIn('{{$randomBoolean}}'),",
 					"            participantLimit: pm.variables.replaceIn('{{$randomInt}}'),",
 					"            requestModeration: pm.variables.replaceIn('{{$randomBoolean}}'),",
@@ -1471,6 +1724,10 @@
 		},
 		{
 			"key": "old_location",
+			"value": ""
+		},
+		{
+			"key": "event_location_id",
 			"value": ""
 		}
 	]
