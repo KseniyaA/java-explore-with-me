@@ -43,7 +43,7 @@ public class AdminEventController {
         List<Event> events = eventService.getAllByParams(users, states, categories, rangeStart, rangeEnd, from, size);
         Map<Long, Integer> allConfirmedRequests = requestService.getAllConfirmedRequests();
         return events.stream()
-                .map(x -> EventMapper.toEventFullDtoResponse(x, allConfirmedRequests.get(x.getId())))
+                .map(x -> EventMapper.toEventFullDtoResponse(x, allConfirmedRequests.getOrDefault(x.getId(), 0)))
                 .collect(Collectors.toList());
     }
 
@@ -54,6 +54,6 @@ public class AdminEventController {
                 "dto = {}", eventId, dto);
         Event event = eventService.updateByAdmin(eventId, EventMapper.toEvent(dto));
         Map<Long, Integer> allConfirmedRequests = requestService.getAllConfirmedRequests();
-        return EventMapper.toEventFullDtoResponse(event, allConfirmedRequests.get(eventId));
+        return EventMapper.toEventFullDtoResponse(event, allConfirmedRequests.getOrDefault(eventId, 0));
     }
 }

@@ -40,7 +40,7 @@ public class PrivateEventController {
                 userId, from, size);
         List<Event> events = eventService.getAll(userId, from, size);
         Map<Long, Integer> allConfirmedRequests = requestService.getAllConfirmedRequests();
-        return events.stream().map(x -> EventMapper.toEventShortDtoResponse(x, allConfirmedRequests.get(x.getId())))
+        return events.stream().map(x -> EventMapper.toEventShortDtoResponse(x, allConfirmedRequests.getOrDefault(x.getId(), 0)))
                 .collect(Collectors.toList());
     }
 
@@ -52,7 +52,7 @@ public class PrivateEventController {
         Event event = eventService.add(userId, EventMapper.toEvent(dto));
         Map<Long, Integer> allConfirmedRequests = requestService.getAllConfirmedRequests();
         log.info("Создан event с id = {}", event.getId());
-        return EventMapper.toEventFullDtoResponse(event, allConfirmedRequests.get(event.getId()));
+        return EventMapper.toEventFullDtoResponse(event, allConfirmedRequests.getOrDefault(event.getId(), 0));
     }
 
     @GetMapping("/{eventId}")
@@ -61,7 +61,7 @@ public class PrivateEventController {
         log.info("Получен запрос GET /users/{userId}/events/{eventId} с параметрами userId = {}, eventId = {}", userId, eventId);
         Event event = eventService.get(userId, eventId);
         Map<Long, Integer> allConfirmedRequests = requestService.getAllConfirmedRequests();
-        return EventMapper.toEventFullDtoResponse(event, allConfirmedRequests.get(event.getId()));
+        return EventMapper.toEventFullDtoResponse(event, allConfirmedRequests.getOrDefault(event.getId(), 0));
     }
 
     @PatchMapping("/{eventId}")
@@ -72,7 +72,7 @@ public class PrivateEventController {
                 "dto = {}", userId, eventId, dto);
         Event event = eventService.update(userId, eventId, EventMapper.toEvent(dto));
         Map<Long, Integer> allConfirmedRequests = requestService.getAllConfirmedRequests();
-        return EventMapper.toEventFullDtoResponse(event, allConfirmedRequests.get(event.getId()));
+        return EventMapper.toEventFullDtoResponse(event, allConfirmedRequests.getOrDefault(event.getId(), 0));
     }
 
     @GetMapping("/{eventId}/requests")

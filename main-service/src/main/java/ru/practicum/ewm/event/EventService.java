@@ -22,4 +22,8 @@ public interface EventService {
                                LocalDateTime rangeEnd, Integer from, Integer size);
 
     Event getPublishedEvent(long eventId, HttpServletRequest request);
+
+    List<Event> getEventsByLocation(Double lat, Double lon, Double radius);
+
+
 }

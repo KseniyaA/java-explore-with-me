@@ -42,6 +42,8 @@ public class EventDtoRequest {
     @NotNull(groups = {Marker.OnCreate.class})
     private LocationDto location;
 
+    private Long locationParamId;
+
     private Boolean paid;
 
     @PositiveOrZero

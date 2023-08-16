@@ -31,8 +31,10 @@ CREATE TABLE IF NOT EXISTS event (
     initiator_id BIGINT NOT NULL,
     lat DOUBLE PRECISION NOT NULL,
     lon DOUBLE PRECISION NOT NULL,
+    location_id BIGINT,
     CONSTRAINT fk_event_to_category FOREIGN KEY(category_id) REFERENCES category(id),
-    CONSTRAINT fk_event_to_initiator FOREIGN KEY(initiator_id) REFERENCES users(id) --,
+    CONSTRAINT fk_event_to_initiator FOREIGN KEY(initiator_id) REFERENCES users(id),
+    CONSTRAINT fk_event_to_location FOREIGN KEY(location_id) REFERENCES location(id)
 );
 
 DROP TABLE IF EXISTS request CASCADE;
@@ -63,3 +65,58 @@ CREATE TABLE IF NOT EXISTS compilation_event (
     CONSTRAINT fk_ce_to_compilation FOREIGN KEY(compilation_id) REFERENCES compilation(id),
     CONSTRAINT fk_ce_to_event FOREIGN KEY(event_id) REFERENCES event(id)
 );
+
+DROP TABLE IF EXISTS location CASCADE;
+CREATE TABLE IF NOT EXISTS location (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    lat DOUBLE PRECISION NOT NULL,
+    lon DOUBLE PRECISION NOT NULL,
+    radius DOUBLE PRECISION NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    CONSTRAINT UQ_LOCATION UNIQUE (name),
+    CONSTRAINT UQ_LOT_LON UNIQUE (lat, lon)
+);
+
+CREATE OR REPLACE FUNCTION distance(lat1 float, lon1 float, lat2 float, lon2 float)
+    RETURNS float
+AS
+'
+declare
+    dist float = 0;
+    rad_lat1 float;
+    rad_lat2 float;
+    theta float;
+    rad_theta float;
+BEGIN
+    IF lat1 = lat2 AND lon1 = lon2
+    THEN
+        RETURN dist;
+    ELSE
+        -- переводим градусы широты в радианы
+        rad_lat1 = pi() * lat1 / 180;
+        -- переводим градусы долготы в радианы
+        rad_lat2 = pi() * lat2 / 180;
+        -- находим разность долгот
+        theta = lon1 - lon2;
+        -- переводим градусы в радианы
+        rad_theta = pi() * theta / 180;
+        -- находим длину ортодромии
+        dist = sin(rad_lat1) * sin(rad_lat2) + cos(rad_lat1) * cos(rad_lat2) * cos(rad_theta);
+
+        IF dist > 1
+            THEN dist = 1;
+        END IF;
+
+        dist = acos(dist);
+        -- переводим радианы в градусы
+        dist = dist * 180 / pi();
+        -- переводим градусы в километры
+        dist = dist * 60 * 1.8524;
+
+        RETURN dist;
+    END IF;
+END;
+'
+LANGUAGE PLPGSQL;
+
+

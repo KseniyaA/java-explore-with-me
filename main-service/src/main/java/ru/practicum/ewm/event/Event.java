@@ -2,6 +2,7 @@ package ru.practicum.ewm.event;
 
 import lombok.*;
 import ru.practicum.ewm.category.Category;
+import ru.practicum.ewm.location.LocationParam;
 import ru.practicum.ewm.user.User;
 
 import javax.persistence.*;
@@ -50,6 +51,10 @@ public class Event {
     @JoinColumn(name = "initiator_id")
     @ToString.Exclude
     private User initiator;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "location_id")
+    private LocationParam locationParam;
 
     @Embedded
     private Location location;
